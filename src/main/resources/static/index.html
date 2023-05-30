@@ -1,10 +1,41 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-<p>Get your greeting <a href="/greeting">here</a></p>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Verificación de estado de URL</title>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="../js/status.js"></script>
+        <script src="../js/docker.js"></script>
+        <script src="../js/nomad.js"></script>
+        <link rel="stylesheet" href="../css/styles.css">
+    </head>
+    <body>
+    <form>
+        <h2>Verificación de estado de URL</h2>
+        <div class="url-container-one-line" style="display: flex; align-items: center;">
+            <label for="dockerUrl">DOCKER:</label>
+            <input type="text" id="dockerUrl" name="dockerUrl" value="http://localhost:5000">
+            <div id="dockerCheck"><h3>&#x274C;</h3></div>
+            <button type="button" onclick="checkUrl('dockerUrl', 'dockerCheck')">Verificar</button>
+        </div>
+        <div class="url-container-one-line">
+            <label for="nomadUrl">NOMAD:</label>
+            <input type="text" id="nomadUrl" name="nomadUrl"  value="http://localhost:4646">
+            <div id="nomadCheck"><h3>&#x274C;</h3></div>
+            <button type="button" onclick="checkUrl('nomadUrl', 'nomadCheck')">Verificar</button>
+        </div>
+        <div class="url-container">
+            <h2>Imágenes Docker <button type="button" onclick="listDockerRegistryImages()">Listar</button></h2>
+            <div class="url-list">
+                <ul id="docker-registry-images"></ul>
+            </div>
+        </div>
+        <div class="url-container">
+            <h2>Jobs de Nomad <button type="button" onclick="listNomadRunningJobs()">Listar</button></h2>
+            <div class="url-list">
+                <ul id="nomad-jobs"></ul>
+            </div>
+        </div>
+    </form>
+    </body>
 </html>

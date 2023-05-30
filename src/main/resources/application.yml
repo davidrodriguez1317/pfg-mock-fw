@@ -1,3 +1,7 @@
 spring:
   application:
-    name: pfg-mock-fw
+    name: "pfg-mock-fw"
+  thymeleaf:
+    prefix: "classpath:/templates/"
+    suffix: ".html"
+

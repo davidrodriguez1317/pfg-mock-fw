@@ -1,0 +1,4 @@
+wiremock:
+  server:
+    port: 8888
+
