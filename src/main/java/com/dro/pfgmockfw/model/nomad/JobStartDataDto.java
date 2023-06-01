@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 @AllArgsConstructor
 @Builder
 @Jacksonized
-public class JobStartData {
+public class JobStartDataDto {
     @NotBlank
     private String dockerUrl;
 

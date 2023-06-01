@@ -24,6 +24,14 @@ public class PfgMockFwAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException ex) {
+        String error = "Missing parameter: " + ex.getParameterName();
+        log.error(error, ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException ex) {

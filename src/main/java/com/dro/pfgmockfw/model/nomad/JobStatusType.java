@@ -1,6 +1,6 @@
 package com.dro.pfgmockfw.model.nomad;
 
-public enum JobStatus {
+public enum JobStatusType {
     PENDING("pending"),
     RUNNING("running"),
     DEAD("dead"),
@@ -10,7 +10,7 @@ public enum JobStatus {
 
     private final String value;
 
-    JobStatus(String value) {
+    JobStatusType(String value) {
         this.value = value;
     }
 
@@ -18,8 +18,8 @@ public enum JobStatus {
         return value;
     }
 
-    public static JobStatus fromString(String value) {
-        for (JobStatus status : JobStatus.values()) {
+    public static JobStatusType fromString(String value) {
+        for (JobStatusType status : JobStatusType.values()) {
             if (status.value.equalsIgnoreCase(value)) {
                 return status;
             }

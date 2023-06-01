@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RunningJob {
+public class RunningJobDto {
     private String id;
 
     @JsonDeserialize(using = JobStatusDeserializer.class)
-    private JobStatus status;
+    private JobStatusType status;
 }
