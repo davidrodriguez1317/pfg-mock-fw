@@ -4,7 +4,6 @@ import com.dro.pfgmockfw.service.StatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -12,7 +11,7 @@ import reactor.core.publisher.Mono;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/status")
-public class StatusController {
+public class ServerStatusController {
 
     private final StatusService statusService;
 

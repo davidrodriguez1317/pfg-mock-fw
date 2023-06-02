@@ -14,10 +14,6 @@ public enum JobStatusType {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
     public static JobStatusType fromString(String value) {
         for (JobStatusType status : JobStatusType.values()) {
             if (status.value.equalsIgnoreCase(value)) {

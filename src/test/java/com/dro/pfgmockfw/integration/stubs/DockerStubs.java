@@ -19,7 +19,7 @@ public class DockerStubs {
 
     public static void stubDockerTags(String repository, List<String> tags){
         String endpoint = String.format("/v2/%s/tags/list", repository);
-        String tagsContent = TestUtils.concatenateTags(tags);
+        String tagsContent = TestUtils.joinWithCommasInsideQuotes(tags);
         String bodyResponse = String.format("{\"name\":\"%s\",\"tags\":[%s]}", repository, tagsContent);
 
         stubFor(get(urlEqualTo(endpoint))

@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,18 +58,16 @@ public class DockerControllerTest extends BaseIntegrationTest {
         //given
         DockerStubs.stubDockerCatalogNoContent();
 
-        //when
+        //when //then
         var result = webTestClient.get()
                 .uri("/docker/images?dockerUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(RunningJobDto[].class)
-                .returnResult();
-
-        // then
-        RunningJobDto[] actualRunningJobDtos = result.getResponseBody();
-        assertNotNull(actualRunningJobDtos);
-        assertEquals(0, actualRunningJobDtos.length);
+                .expectBodyList(RepositoryWithTagsResponseDto.class)
+                .consumeWith(response -> {
+                    var responseBody = response.getResponseBody();
+                    assertThat(responseBody).isNull();
+                });
 
     }
 
@@ -93,7 +92,7 @@ public class DockerControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn500_whenTechnicalExceptionInNomad() {
+    public void shouldReturn500_whenTechnicalExceptionInDocker() {
         //given
         DockerStubs.stubDockerCatalogWithStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
