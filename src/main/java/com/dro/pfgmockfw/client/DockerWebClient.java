@@ -4,6 +4,7 @@ import com.dro.pfgmockfw.exception.WebClientResponseException;
 import com.dro.pfgmockfw.exception.WebClientTechnicalException;
 import com.dro.pfgmockfw.model.docker.RepositoriesResponseDto;
 import com.dro.pfgmockfw.model.docker.RepositoryWithTagsResponseDto;
+import com.fasterxml.jackson.core.JsonParseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -29,7 +30,8 @@ public class DockerWebClient {
                         response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
                         response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
-                .bodyToMono(RepositoriesResponseDto.class);
+                .bodyToMono(RepositoriesResponseDto.class)
+                .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
     }
 
     public Mono<RepositoryWithTagsResponseDto> getVersionsFromRepository(final String dockerUrl, final String repository) {
@@ -42,7 +44,8 @@ public class DockerWebClient {
                         response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
                         response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
-                .bodyToMono(RepositoryWithTagsResponseDto.class);
+                .bodyToMono(RepositoryWithTagsResponseDto.class)
+                .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
     }
 
 }

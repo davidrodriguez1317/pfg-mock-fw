@@ -1,5 +1,6 @@
 package com.dro.pfgmockfw.model.nomad;
 
+import com.dro.pfgmockfw.exception.EnumDoesNotExistException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,23 +9,23 @@ public class JobStatusTypeTest {
 
     @Test
     public void fromString_validValue_returnsCorrectJobStatusType() {
-        // Arrange
+        //given
         String value = "running";
 
-        // Act
+        //when
         JobStatusType status = JobStatusType.fromString(value);
 
-        // Assert
+        //then
         assertEquals(JobStatusType.RUNNING, status);
     }
 
     @Test
-    public void fromString_invalidValue_throwsIllegalArgumentException() {
-        // Arrange
+    public void fromString_invalidValue_EnumDoesNotExistException() {
+        //given
         String value = "invalid";
 
-        // Act and Assert
-        assertThrows(IllegalArgumentException.class, () -> {
+        //when //then
+        assertThrows(EnumDoesNotExistException.class, () -> {
             JobStatusType.fromString(value);
         });
     }

@@ -1,5 +1,7 @@
 package com.dro.pfgmockfw.model.nomad;
 
+import com.dro.pfgmockfw.exception.EnumDoesNotExistException;
+
 public enum JobStatusType {
     PENDING("pending"),
     RUNNING("running"),
@@ -20,6 +22,6 @@ public enum JobStatusType {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Invalid JobStatus: " + value);
+        throw new EnumDoesNotExistException("Invalid JobStatus: " + value);
     }
 }
