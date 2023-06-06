@@ -25,8 +25,6 @@ public class JobStatusTypeTest {
         String value = "invalid";
 
         //when //then
-        assertThrows(EnumDoesNotExistException.class, () -> {
-            JobStatusType.fromString(value);
-        });
+        assertThrows(EnumDoesNotExistException.class, () -> JobStatusType.fromString(value));
     }
 }

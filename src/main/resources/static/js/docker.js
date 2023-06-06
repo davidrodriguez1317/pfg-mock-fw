@@ -1,5 +1,5 @@
 function listDockerRegistryImages() {
-    var dockerUrl = document.getElementById("dockerUrl").value;
+    const dockerUrl = document.getElementById("dockerUrl").value;
     console.log("Getting docker images from --> " + dockerUrl);
 
     axios.get('/docker/images?dockerUrl='.concat(dockerUrl))

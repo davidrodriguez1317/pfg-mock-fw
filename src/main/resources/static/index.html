@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Verificación de estado de URL</title>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="../js/general.js"></script>
         <script src="../js/status.js"></script>
         <script src="../js/docker.js"></script>
         <script src="../js/nomad.js"></script>
@@ -16,13 +17,13 @@
             <label for="dockerUrl">DOCKER:</label>
             <input type="text" id="dockerUrl" name="dockerUrl" value="http://localhost:5000">
             <div id="dockerCheck"><h3>&#x274C;</h3></div>
-            <button type="button" onclick="checkUrl('dockerUrl', 'dockerCheck')">Verificar</button>
+            <button type="button" onclick="checkUrl('dockerUrl', 'dockerCheck', dockerUrlStatus)">Verificar</button>
         </div>
         <div class="url-container-one-line">
             <label for="nomadUrl">NOMAD:</label>
             <input type="text" id="nomadUrl" name="nomadUrl"  value="http://localhost:4646">
             <div id="nomadCheck"><h3>&#x274C;</h3></div>
-            <button type="button" onclick="checkUrl('nomadUrl', 'nomadCheck')">Verificar</button>
+            <button type="button" onclick="checkUrl('nomadUrl', 'nomadCheck', nomadUrlStatus)">Verificar</button>
         </div>
         <div class="url-container">
             <h2>Imágenes Docker <button type="button" onclick="listDockerRegistryImages()">Listar</button></h2>
@@ -31,7 +32,7 @@
             </div>
         </div>
         <div class="url-container">
-            <h2>Jobs de Nomad <button type="button" onclick="listNomadRunningJobs()">Listar</button></h2>
+            <h2>Jobs de Nomad</h2>
             <div class="url-list">
                 <ul id="nomad-jobs"></ul>
             </div>

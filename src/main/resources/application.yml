@@ -5,3 +5,5 @@ spring:
     prefix: "classpath:/templates/"
     suffix: ".html"
 
+app:
+  running-jobs-polling-time: 5

@@ -8,9 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
-public class JobStartDataDto {
-    @NotBlank
-    private String dockerUrl;
+public class JobStopDataDto {
 
     @NotBlank
     private String nomadUrl;

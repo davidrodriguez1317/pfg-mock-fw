@@ -1,6 +1,7 @@
 package com.dro.pfgmockfw.controller;
 
 import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
+import com.dro.pfgmockfw.model.nomad.JobStopDataDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.service.NomadService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -21,18 +23,25 @@ public class NomadController {
 
     @GetMapping("/jobs")
     @ResponseBody
-    public Mono<RunningJobDto[]> listRunningJobs(
+    public Flux<RunningJobDto> listRunningJobs(
             @RequestParam("nomadUrl") @NotBlank String nomadUrl
     ) {
-        log.info("Getting docker containers");
+        log.info("Getting running jobs");
         return nomadService.getRunningJobs(nomadUrl);
     }
 
     @PostMapping("/start")
     @ResponseBody
-    public Mono<Void> startJob(@RequestBody @Valid JobStartDataDto jobStartDataDto) {
+    public Mono<Boolean> startJob(@RequestBody @Valid JobStartDataDto jobStartDataDto) {
         log.info("Starting nomad job for " + jobStartDataDto);
-        return Mono.empty();
+        return nomadService.startJob(jobStartDataDto);
+    }
+
+    @PostMapping("/stop")
+    @ResponseBody
+    public Mono<Boolean> stopJob(@RequestBody @Valid JobStopDataDto jobStopDataDto) {
+        log.info("Stopping nomad job for " + jobStopDataDto);
+        return nomadService.stopJob(jobStopDataDto);
     }
 
 }

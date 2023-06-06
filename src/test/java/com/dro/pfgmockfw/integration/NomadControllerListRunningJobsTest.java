@@ -14,7 +14,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class NomadControllerTest extends BaseIntegrationTest {
+public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -38,9 +38,9 @@ public class NomadControllerTest extends BaseIntegrationTest {
         assertNotNull(actualRunningJobDtos);
         assertEquals(2, actualRunningJobDtos.length);
 
-        assertEquals("Job 1", actualRunningJobDtos[0].getId());
+        assertEquals("price-calculator", actualRunningJobDtos[0].getId());
         assertEquals(JobStatusType.RUNNING, actualRunningJobDtos[0].getStatus());
-        assertEquals("Job 2", actualRunningJobDtos[1].getId());
+        assertEquals("product-cost", actualRunningJobDtos[1].getId());
         assertEquals(JobStatusType.COMPLETE, actualRunningJobDtos[1].getStatus());
 
     }

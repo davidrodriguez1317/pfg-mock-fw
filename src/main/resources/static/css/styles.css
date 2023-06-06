@@ -19,8 +19,38 @@ h2 {
     margin-bottom: 10px;
 }
 
-label {
-    width: 80px;
+.job-item {
+    display: flex;
+    align-items: center;
+}
+
+.status {
+    margin-left: 4px;
+}
+
+.label-key-bold {
+    font-weight: bold;
+    width: 85px;
+    margin-right: 4px;
+}
+
+.label-value {
+    width: 150px;
+    margin-right: 4px;
+}
+
+.stop-button {
+    margin-left: 10px;
+    padding: 2px 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.stop-button:hover {
+    background-color: #3e8e41;
 }
 
 input[type="text"] {
