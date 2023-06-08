@@ -8,34 +8,38 @@ function listDockerRegistryImages() {
             console.log("Printing data --> " + data);
             const elementList = document.getElementById('docker-registry-images');
 
-            elementList.innerHTML = "";
+            if(data.length === 0) {
+                elementList.innerHTML = "No hay repositorios disponibles en Docker"
+            } else {
+                elementList.innerHTML = "";
 
-            for (const i in data) {
-                if (data.hasOwnProperty(i)) {
-                    const repository = data[i];
-                    const li = document.createElement('li');
+                for (const i in data) {
+                    if (data.hasOwnProperty(i)) {
+                        const repository = data[i];
+                        const li = document.createElement('li');
 
-                    const sortedTags = repository.tags.sort();
+                        const sortedTags = repository.tags.sort();
 
-                    const nameSpan = document.createElement('span');
-                    nameSpan.appendChild(document.createTextNode(repository.name));
-                    li.appendChild(nameSpan);
+                        const nameSpan = document.createElement('span');
+                        nameSpan.appendChild(document.createTextNode(repository.name));
+                        li.appendChild(nameSpan);
 
-                    li.appendChild(document.createTextNode(': '));
+                        li.appendChild(document.createTextNode(': '));
 
-                    for (let j = 0; j < sortedTags.length; j++) {
-                        const span = document.createElement('span');
-                        span.appendChild(document.createTextNode(sortedTags[j]));
-                        li.appendChild(span);
+                        for (let j = 0; j < sortedTags.length; j++) {
+                            const span = document.createElement('span');
+                            span.appendChild(document.createTextNode(sortedTags[j]));
+                            li.appendChild(span);
 
-                        const button = document.createElement('button');
-                        button.type = "button";
-                        button.appendChild(document.createTextNode('Añadir'));
-                        button.addEventListener('click', createAddNomadJobHandler(sortedTags[j]));
-                        li.appendChild(button);
+                            const button = document.createElement('button');
+                            button.type = "button";
+                            button.appendChild(document.createTextNode('Añadir'));
+                            button.addEventListener('click', createAddNomadJobHandler(sortedTags[j]));
+                            li.appendChild(button);
+                        }
+
+                        elementList.appendChild(li);
                     }
-
-                    elementList.appendChild(li);
                 }
             }
         })

@@ -1,5 +1,6 @@
 package com.dro.pfgmockfw.controller;
 
+import com.dro.pfgmockfw.model.nomad.FixedJobDto;
 import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
 import com.dro.pfgmockfw.model.nomad.JobStopDataDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
@@ -30,6 +31,13 @@ public class NomadController {
         return nomadService.getRunningJobs(nomadUrl);
     }
 
+    @GetMapping("/fixed-jobs")
+    @ResponseBody
+    public Flux<FixedJobDto> listFixedJobs() {
+        log.info("Getting fixed jobs");
+        return nomadService.getFixedJobs();
+    }
+
     @PostMapping("/start")
     @ResponseBody
     public Mono<Boolean> startJob(@RequestBody @Valid JobStartDataDto jobStartDataDto) {
@@ -37,11 +45,12 @@ public class NomadController {
         return nomadService.startJob(jobStartDataDto);
     }
 
-    @PostMapping("/stop")
+    @DeleteMapping("/stop")
     @ResponseBody
-    public Mono<Boolean> stopJob(@RequestBody @Valid JobStopDataDto jobStopDataDto) {
-        log.info("Stopping nomad job for " + jobStopDataDto);
-        return nomadService.stopJob(jobStopDataDto);
+    public Mono<Boolean> stopAndPurgeJob(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
+                                         @RequestParam (name = "appName") @Valid String appName) {
+        log.info("Stopping nomad job {} in {} ", appName, nomadUrl);
+        return nomadService.stopAndPurgeJob(nomadUrl, appName);
     }
 
 }

@@ -1,10 +1,7 @@
 package com.dro.pfgmockfw.integration;
 
 import com.dro.pfgmockfw.integration.stubs.DockerStubs;
-import com.dro.pfgmockfw.integration.stubs.NomadStubs;
 import com.dro.pfgmockfw.model.docker.RepositoryWithTagsResponseDto;
-import com.dro.pfgmockfw.model.nomad.JobStatusType;
-import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -14,12 +11,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class DockerControllerTest extends BaseIntegrationTest {
+public class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -66,7 +62,8 @@ public class DockerControllerTest extends BaseIntegrationTest {
                 .expectBodyList(RepositoryWithTagsResponseDto.class)
                 .consumeWith(response -> {
                     var responseBody = response.getResponseBody();
-                    assertThat(responseBody).isNull();
+                    assertNotNull(responseBody);
+                    assertEquals(0, responseBody.size());
                 });
 
     }

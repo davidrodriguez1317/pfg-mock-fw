@@ -14,10 +14,7 @@ public class JobStopDataDto {
     private String nomadUrl;
 
     @NotBlank
-    private String appName;
-
-    @NotBlank
-    private String appVersion;
+    private String jobId;
 
 }
 

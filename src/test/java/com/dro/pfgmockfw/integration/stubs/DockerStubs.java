@@ -35,7 +35,7 @@ public class DockerStubs {
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader("Content-Type", "application/json")
-                        .withBody("{}")));
+                        .withBody("{\"repositories\":[]}")));
 
     }
 

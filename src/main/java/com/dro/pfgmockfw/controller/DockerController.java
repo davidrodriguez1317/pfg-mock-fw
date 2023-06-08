@@ -27,14 +27,4 @@ public class DockerController {
         return dockerService.getAllRepositoriesWithVersions(dockerUrl);
     }
 
-    @GetMapping("/containers")
-    @ResponseBody
-    public Map<String, List<String>> listDockerRegistryContainers(
-            @RequestParam("dockerUrl") @NotBlank String dockerUrl,
-            @RequestParam("repository") @NotBlank String repository
-    ) {
-        log.info("Getting docker containers");
-        return Map.of("pfg-product", List.of("0.0.1-SNAPSHOT"),
-                "pfg-price", List.of("0.0.2-SNAPSHOT"));
-    }
 }

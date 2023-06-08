@@ -47,4 +47,31 @@ public class NomadStubs {
                         .withStatus(httpStatus)));
 
     }
+
+    public static void stubNomadStopJobWithSuccess() {
+        String bodyResponse = ResourceUtils.getStringFromResources("responses/nomad-stop-job-success.json");
+
+        stubFor(delete(urlPathMatching("\\/v1\\/job\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyResponse)));
+    }
+
+    public static void stubNomadStopJobNoSuccess() {
+        String bodyResponse = ResourceUtils.getStringFromResources("responses/nomad-stop-job-no-success.json");
+
+        stubFor(delete(urlPathMatching("\\/v1\\/job\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyResponse)));
+    }
+
+    public static void stubNomadStopJobWithStatus(int httpStatus){
+        stubFor(delete(urlPathMatching("\\/v1\\/job\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(httpStatus)));
+
+    }
 }
