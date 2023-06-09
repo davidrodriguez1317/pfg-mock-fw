@@ -68,8 +68,8 @@ public class NomadServiceTest {
 
         FixedJobDto fixedJobDto1 = fixedJobsList.get(0);
         assertEquals("keycloak", fixedJobDto1.getAppName());
-        assertEquals("9.0", fixedJobDto1.getAppVersion());
-        assertEquals("nomad-keycloak-9.0.json", fixedJobDto1.getFileName());
+        assertEquals("18.0", fixedJobDto1.getAppVersion());
+        assertEquals("nomad-keycloak-18.0.json", fixedJobDto1.getFileName());
 
     }
 

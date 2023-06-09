@@ -25,15 +25,9 @@ public class ResourceUtils {
         }
     }
 
-    public static List<String> listFilesFromDirectory(String folderName) {
-        ClassLoader classLoader = ResourceUtils.class.getClassLoader();
-        URL resource = classLoader.getResource(folderName);
+    public static List<String> listFilesFromDirectory(final String folderName) {
 
-        if (Objects.isNull(resource)) {
-            throw new NoDataAvailableException("It was not possible list files in folder " + folderName);
-        }
-
-        File folder = new File(resource.getFile());
+        File folder = getFolderReference(folderName);
 
         if (!folder.exists() || !folder.isDirectory()) {
             throw new NoDataAvailableException("It was not possible list files in folder ".concat(folderName));
@@ -47,4 +41,16 @@ public class ResourceUtils {
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
+
+    public static File getFolderReference(final String folderName) {
+        ClassLoader classLoader = ResourceUtils.class.getClassLoader();
+        URL resource = classLoader.getResource(folderName);
+
+        if (Objects.isNull(resource)) {
+            throw new NoDataAvailableException("It was not possible list files in folder " + folderName);
+        }
+
+        return new File(resource.getFile());
+    }
+
 }

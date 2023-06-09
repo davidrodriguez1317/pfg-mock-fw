@@ -38,10 +38,17 @@ public class NomadController {
         return nomadService.getFixedJobs();
     }
 
+    @PostMapping("/start-fixed-job")
+    @ResponseBody
+    public Mono<Boolean> startFixedJob(@RequestBody @Valid FixedJobDto fixedJobDto) {
+        log.info("Starting fixed job {}", fixedJobDto.toString());
+        return nomadService.startFixedJob(fixedJobDto);
+    }
+
     @PostMapping("/start")
     @ResponseBody
     public Mono<Boolean> startJob(@RequestBody @Valid JobStartDataDto jobStartDataDto) {
-        log.info("Starting nomad job for " + jobStartDataDto);
+        log.info("Starting nomad job for {}", jobStartDataDto);
         return nomadService.startJob(jobStartDataDto);
     }
 
@@ -49,7 +56,7 @@ public class NomadController {
     @ResponseBody
     public Mono<Boolean> stopAndPurgeJob(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
                                          @RequestParam (name = "appName") @Valid String appName) {
-        log.info("Stopping nomad job {} in {} ", appName, nomadUrl);
+        log.info("Stopping nomad job {} in {}", appName, nomadUrl);
         return nomadService.stopAndPurgeJob(nomadUrl, appName);
     }
 

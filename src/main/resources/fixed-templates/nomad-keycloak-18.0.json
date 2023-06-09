@@ -1,0 +1,93 @@
+{
+  "job": [
+    {
+      "keycloak": [
+        {
+          "datacenters": [
+            "dc1"
+          ],
+          "group": [
+            {
+              "keycloak": [
+                {
+                  "count": 1,
+                  "task": [
+                    {
+                      "keycloak": [
+                        {
+                          "config": [
+                            {
+                              "args": [
+                                "start-dev"
+                              ],
+                              "image": "quay.io/keycloak/keycloak:18.0.0",
+                              "port_map": [
+                                {
+                                  "callback": 8250,
+                                  "keycloak": 8080
+                                }
+                              ]
+                            }
+                          ],
+                          "driver": "docker",
+                          "env": [
+                            {
+                              "KEYCLOAK_PASSWORD": "admin",
+                              "KEYCLOAK_USER": "admin"
+                            }
+                          ],
+                          "resources": [
+                            {
+                              "memory": 550,
+                              "network": [
+                                {
+                                  "port": [
+                                    {
+                                      "keycloak": [
+                                        {
+                                          "static": 18080
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "callback": [
+                                        {
+                                          "static": 18250
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "service": [
+                            {
+                              "check": [
+                                {
+                                  "interval": "10s",
+                                  "port": "keycloak",
+                                  "timeout": "2s",
+                                  "type": "tcp"
+                                }
+                              ],
+                              "name": "keycloak",
+                              "tags": [
+                                "auth"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "type": "service"
+        }
+      ]
+    }
+  ]
+}

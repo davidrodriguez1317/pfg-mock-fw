@@ -43,17 +43,16 @@ public class NomadWebClient {
                 .onErrorMap(EnumDoesNotExistException.class, ex -> new WebClientResponseException("Not valid enum in response"));
     }
 
-    public Mono<Boolean> startJob(final String nomadUrl, final String jobName, final String imageName) {
-        String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot.json");
-        String body = String.format(jsonTemplate, jobName, imageName);
+    public Mono<Boolean> startJob(final String nomadUrl, final String job) {
+
         String uri = String.format("%s/v1/jobs", nomadUrl);
 
         log.info("Starting job from " + uri);
-        log.info("Job request: " + body);
+        log.info("Job request: " + job);
 
         return webClient.post()
                 .uri(uri)
-                .body(BodyInserters.fromValue(body))
+                .body(BodyInserters.fromValue(job))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
                         response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -41,7 +42,10 @@ public class NomadService {
                 .concat(":")
                 .concat(jobStartDataDto.getAppVersion());
 
-        return nomadWebClient.startJob(jobStartDataDto.getNomadUrl(), jobStartDataDto.getAppName(), imageName);
+        String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot.json");
+        String job = String.format(jsonTemplate, jobStartDataDto.getAppName(), imageName);
+        
+        return nomadWebClient.startJob(jobStartDataDto.getNomadUrl(), job);
     }
 
     public Mono<Boolean> stopAndPurgeJob(String nomadUrl, String appName) {
@@ -53,7 +57,7 @@ public class NomadService {
         return Flux.fromIterable(parseFixedJobDtoFromFilenames(fileNames));
     }
 
-    private static List<FixedJobDto> parseFixedJobDtoFromFilenames(List<String> filenames) {
+    private static List<FixedJobDto> parseFixedJobDtoFromFilenames(final List<String> filenames) {
         List<FixedJobDto> fixedJobDtos = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("nomad-(\\w+)-(\\d+\\.\\d+)\\.json");
@@ -76,5 +80,13 @@ public class NomadService {
         }
 
         return fixedJobDtos;
+    }
+
+    public Mono<Boolean> startFixedJob(final FixedJobDto fixedJobDto) {
+
+        String jobFileLocation = "fixed-templates/".concat(fixedJobDto.getFileName().concat(".json"));
+        String job = ResourceUtils.getStringFromResources(jobFileLocation);
+
+        return nomadWebClient.startJob(fixedJobDto.getNomadUrl(), job);
     }
 }
