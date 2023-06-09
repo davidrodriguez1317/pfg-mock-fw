@@ -3,8 +3,8 @@
     "Datacenters": [
       "dc1"
     ],
-    "ID": "%1$s",
-    "Name": "%1$s",
+    "ID": "some-job",
+    "Name": "some-job",
     "TaskGroups": [
       {
         "Count": 1,
@@ -27,16 +27,17 @@
               "ports": [
                 "http"
               ],
-              "image": "%2$s",
+              "image": "localhost:5000/some-job:1.0.0-SNAPSHOT",
               "network_mode": "host"
             },
             "Driver": "docker",
             "env": [
               {
-                %3$s
+                "ENV_1" : "value1",
+                "ENV_2" : "value2"
               }
             ],
-            "Name": "%1$s",
+            "Name": "some-job",
             "Resources": {
               "CPU": 500,
               "MemoryMB": 256

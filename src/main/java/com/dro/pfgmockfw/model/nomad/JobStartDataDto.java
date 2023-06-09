@@ -3,6 +3,8 @@ package com.dro.pfgmockfw.model.nomad;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.Map;
+
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class JobStartDataDto {
 
     @NotBlank
     private String appVersion;
+
+    private Map<String, String> envs;
 
 }
 

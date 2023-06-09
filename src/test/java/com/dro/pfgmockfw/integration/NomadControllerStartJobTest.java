@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.util.Map;
+
 @Slf4j
 public class NomadControllerStartJobTest extends BaseIntegrationTest {
 
@@ -21,6 +23,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
             .nomadUrl("http://localhost:8888")
             .appName("first-app")
             .appVersion("0.0.1-SNAPSHOT")
+            .envs(Map.of("ENV1", "value1", "ENV2", "value2"))
             .build();
 
     @Test

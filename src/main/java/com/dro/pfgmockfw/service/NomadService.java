@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,8 +43,12 @@ public class NomadService {
                 .concat(":")
                 .concat(jobStartDataDto.getAppVersion());
 
+        String envsAsString = jobStartDataDto.getEnvs().entrySet().stream()
+                .map(entry -> "\"" + entry.getKey() + "\" : \"" + entry.getValue() + "\"")
+                .collect(Collectors.joining(","));
+
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot.json");
-        String job = String.format(jsonTemplate, jobStartDataDto.getAppName(), imageName);
+        String job = String.format(jsonTemplate, jobStartDataDto.getAppName(), imageName, envsAsString);
         
         return nomadWebClient.startJob(jobStartDataDto.getNomadUrl(), job);
     }
