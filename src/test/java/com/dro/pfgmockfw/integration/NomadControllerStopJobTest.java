@@ -27,7 +27,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&appName=some-job")
+                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
 
                 .expectStatus().isOk()
@@ -43,7 +43,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&appName=some-job")
+                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)
@@ -56,7 +56,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
     public void shouldReturn400_whenNotValidRequestParam() {
         //given //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrlxxx=http://localhost:8888&appName=some-job")
+                .uri("/nomad/stop?nomadUrlxxx=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -81,7 +81,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&appName=some-job")
+                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isNotFound();
 
@@ -95,7 +95,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&appName=some-job")
+                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().is5xxServerError();
 

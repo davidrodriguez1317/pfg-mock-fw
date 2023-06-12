@@ -5,7 +5,7 @@ function listDockerRegistryImages() {
     axios.get('/docker/images?dockerUrl='.concat(dockerUrl))
         .then(function (response) {
             const data = response.data;
-            console.log("Printing data --> " + data);
+            console.log("Printing response --> " + response);
             const elementList = document.getElementById('docker-registry-images');
 
             if(data.length === 0) {

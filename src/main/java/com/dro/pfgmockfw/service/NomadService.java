@@ -4,20 +4,16 @@ import com.dro.pfgmockfw.client.NomadWebClient;
 import com.dro.pfgmockfw.mapper.NomadMapper;
 import com.dro.pfgmockfw.model.nomad.FixedJobDto;
 import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
-import com.dro.pfgmockfw.model.nomad.JobStopDataDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
 import com.dro.pfgmockfw.utils.ResourceUtils;
 import com.dro.pfgmockfw.utils.StringUtils;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -75,8 +71,8 @@ public class NomadService {
                 String appVersion = matcher.group(2);
 
                 FixedJobDto fixedJobDto = FixedJobDto.builder()
-                        .appName(appName)
-                        .appVersion(appVersion)
+                        .name(appName)
+                        .version(appVersion)
                         .fileName(filename)
                         .build();
 
@@ -89,7 +85,7 @@ public class NomadService {
 
     public Mono<Boolean> startFixedJob(final FixedJobDto fixedJobDto) {
 
-        String jobFileLocation = "fixed-templates/".concat(fixedJobDto.getFileName().concat(".json"));
+        String jobFileLocation = "fixed-templates/".concat(fixedJobDto.getFileName());
         String job = ResourceUtils.getStringFromResources(jobFileLocation);
 
         return nomadWebClient.startJob(fixedJobDto.getNomadUrl(), job);

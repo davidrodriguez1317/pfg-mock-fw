@@ -8,7 +8,6 @@ import com.dro.pfgmockfw.model.nomad.JobStatusType;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
 import com.dro.pfgmockfw.utils.ResourceUtils;
-import com.dro.pfgmockfw.utils.TestUtils;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skyscreamer.jsonassert.JSONAssert;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -76,8 +73,8 @@ public class NomadServiceTest {
         assertEquals(1, fixedJobsList.size());
 
         FixedJobDto fixedJobDto1 = fixedJobsList.get(0);
-        assertEquals("keycloak", fixedJobDto1.getAppName());
-        assertEquals("18.0", fixedJobDto1.getAppVersion());
+        assertEquals("keycloak", fixedJobDto1.getName());
+        assertEquals("18.0", fixedJobDto1.getVersion());
         assertEquals("nomad-keycloak-18.0.json", fixedJobDto1.getFileName());
 
     }

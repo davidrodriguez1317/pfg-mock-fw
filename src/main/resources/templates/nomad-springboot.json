@@ -31,11 +31,9 @@
               "network_mode": "host"
             },
             "Driver": "docker",
-            "env": [
-              {
-                %3$s
-              }
-            ],
+            "Env": {
+               %3$s
+            },
             "Name": "%1$s",
             "Resources": {
               "CPU": 500,

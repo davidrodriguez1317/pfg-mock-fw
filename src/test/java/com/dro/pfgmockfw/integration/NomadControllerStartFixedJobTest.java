@@ -19,8 +19,8 @@ public class NomadControllerStartFixedJobTest extends BaseIntegrationTest {
 
     private static final FixedJobDto fixedJobStartDataDto = FixedJobDto.builder()
             .nomadUrl("http://localhost:8888")
-            .appName("keycloak")
-            .appVersion("18.0")
+            .name("keycloak")
+            .version("18.0")
             .fileName("nomad-keycloak-18.0")
             .build();
 

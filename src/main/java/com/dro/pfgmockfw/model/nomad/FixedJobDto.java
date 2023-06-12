@@ -12,9 +12,9 @@ public class FixedJobDto {
     @NotBlank
     private String nomadUrl;
     @NotBlank
-    private String appName;
+    private String name;
     @NotBlank
-    private String appVersion;
+    private String version;
     @NotBlank
     private String fileName;
 }

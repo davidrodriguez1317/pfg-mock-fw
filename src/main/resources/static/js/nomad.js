@@ -7,7 +7,7 @@ function listNomadRunningJobs() {
         axios.get('/nomad/jobs?nomadUrl='.concat(nomadUrl))
             .then(function (response) {
                 const data = response.data;
-                console.log("Printing data --> " + data);
+                console.log("Printing response --> " + response);
 
                 elementList.innerHTML = "";
 
@@ -39,7 +39,7 @@ function listNomadRunningJobs() {
                         const button = document.createElement('button');
                         button.type = "button";
                         button.classList.add("stop-button");
-                        button.appendChild(document.createTextNode('PARAR'));
+                        button.appendChild(document.createTextNode('Parar'));
                         button.addEventListener('click', function () {
                             stopNomadJob(job.id);
                         });
@@ -61,9 +61,20 @@ function listNomadRunningJobs() {
     }
 }
 
-function stopNomadJob(jobId) {
-    console.log("Se ha parado el job con ID: " + jobId);
-    // Lógica para detener el trabajo en Nomad
+function stopNomadJob(jobName) {
+    let nomadUrl = document.getElementById("nomadUrl").value;
+
+    console.log("Parando el job con ID: ".concat(jobName));
+
+    axios.delete('/nomad/stop?nomadUrl='.concat(nomadUrl).concat("&jobName=").concat(jobName))
+        .then(function (response) {
+            const data = response.data;
+            console.log("Printing response --> " + response);
+        })
+        .catch(function (error) {
+            console.log(error);
+            alert("No se pudo parar el job: " + error.response.data);
+        });
 }
 
 
@@ -88,6 +99,69 @@ function startJob(dockerUrl, nomadUrl, appName, appVersion) {
         .catch(error => {
             const status = error.response.status;
             console.error('Error lanzando el job con estos datos:', body);
+            alert(`El estado recibido es: ${status}`);
+        });
+}
+
+
+function listFixedNomadJobs() {
+    console.log("Getting fixed jobs from");
+
+    axios.get('/nomad/fixed-jobs')
+        .then(function (response) {
+            const data = response.data;
+            console.log("Printing response --> " + data);
+            const elementList = document.getElementById('nomad-fixed-jobs');
+
+            if(data.length === 0) {
+                elementList.innerHTML = "No hay fixed jobs disponibles en el backend"
+            } else {
+                elementList.innerHTML = "";
+
+                for (const i in data) {
+                    if (data.hasOwnProperty(i)) {
+                        const fixedJob = data[i];
+                        const li = document.createElement('li');
+
+                        const nameSpan = document.createElement('span');
+                        nameSpan.appendChild(document.createTextNode(fixedJob.name + " " + fixedJob.version));
+                        li.appendChild(nameSpan);
+
+                        const button = document.createElement('button');
+                        button.type = "button";
+                        button.appendChild(document.createTextNode('Añadir'));
+                        button.addEventListener('click', function () {
+                            startFixedJob(data[i]);
+                        });
+                        li.appendChild(button);
+                        elementList.appendChild(li);
+                    }
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            alert("Error en la llamada al servidor: " + error.response.data);
+        });
+}
+
+function startFixedJob(fixedJob) {
+
+    fixedJob.nomadUrl = document.getElementById("nomadUrl").value;
+
+    axios.post('/nomad/start-fixed-job', JSON.stringify(fixedJob), {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            const status = response.status;
+            console.log(`El estado recibido es: ${status}`);
+            alert(`El estado recibido es: ${status}`);
+        })
+        .catch(error => {
+            const status = error.response.status;
+            console.error('Error lanzando el job con estos datos:', fixedJob);
             alert(`El estado recibido es: ${status}`);
         });
 }

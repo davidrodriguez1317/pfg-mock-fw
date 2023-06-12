@@ -2,7 +2,6 @@ package com.dro.pfgmockfw.controller;
 
 import com.dro.pfgmockfw.model.nomad.FixedJobDto;
 import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
-import com.dro.pfgmockfw.model.nomad.JobStopDataDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.service.NomadService;
 import jakarta.validation.Valid;
@@ -55,9 +54,9 @@ public class NomadController {
     @DeleteMapping("/stop")
     @ResponseBody
     public Mono<Boolean> stopAndPurgeJob(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
-                                         @RequestParam (name = "appName") @Valid String appName) {
-        log.info("Stopping nomad job {} in {}", appName, nomadUrl);
-        return nomadService.stopAndPurgeJob(nomadUrl, appName);
+                                         @RequestParam (name = "jobName") @Valid String jobName) {
+        log.info("Stopping nomad job {} in {}", jobName, nomadUrl);
+        return nomadService.stopAndPurgeJob(nomadUrl, jobName);
     }
 
 }

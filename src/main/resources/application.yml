@@ -6,4 +6,4 @@ spring:
     suffix: ".html"
 
 app:
-  running-jobs-polling-time: 5
+  running-jobs-polling-time: 10
