@@ -1,65 +1,55 @@
-function listDockerRegistryImages() {
+async function listDockerRegistryImages() {
     const dockerUrl = document.getElementById("dockerUrl").value;
+    const elementList = document.getElementById('docker-registry-images');
+
     console.log("Getting docker images from --> " + dockerUrl);
 
-    axios.get('/docker/images?dockerUrl='.concat(dockerUrl))
-        .then(function (response) {
-            const data = response.data;
-            console.log("Printing response --> " + response);
-            const elementList = document.getElementById('docker-registry-images');
+    const path = "/docker/images?dockerUrl=".concat(dockerUrl)
 
-            if(data.length === 0) {
-                elementList.innerHTML = "No hay repositorios disponibles en Docker"
-            } else {
-                elementList.innerHTML = "";
+    const data = await getRequest(path);
 
-                for (const i in data) {
-                    if (data.hasOwnProperty(i)) {
-                        const repository = data[i];
-                        const li = document.createElement('li');
+    if(data.length === 0) {
+        elementList.innerHTML = "No hay repositorios disponibles en Docker"
+    } else {
+        elementList.innerHTML = "";
 
-                        const sortedTags = repository.tags.sort();
+        for (const i in data) {
+            if (data.hasOwnProperty(i)) {
+                const repository = data[i];
+                const li = document.createElement('li');
 
-                        const nameSpan = document.createElement('span');
-                        nameSpan.appendChild(document.createTextNode(repository.name));
-                        li.appendChild(nameSpan);
+                const sortedTags = repository.tags.sort();
 
-                        li.appendChild(document.createTextNode(': '));
+                const nameSpan = document.createElement('span');
+                nameSpan.appendChild(document.createTextNode(repository.name));
+                li.appendChild(nameSpan);
 
-                        for (let j = 0; j < sortedTags.length; j++) {
-                            const span = document.createElement('span');
-                            span.appendChild(document.createTextNode(sortedTags[j]));
-                            li.appendChild(span);
+                li.appendChild(document.createTextNode(': '));
 
-                            const button = document.createElement('button');
-                            button.type = "button";
-                            button.appendChild(document.createTextNode('Añadir'));
-                            button.addEventListener('click', createAddNomadJobHandler(sortedTags[j]));
-                            li.appendChild(button);
-                        }
+                for (let j = 0; j < sortedTags.length; j++) {
+                    const span = document.createElement('span');
+                    span.appendChild(document.createTextNode(sortedTags[j]));
+                    li.appendChild(span);
 
-                        elementList.appendChild(li);
-                    }
+                    const button = document.createElement('button');
+                    button.type = "button";
+                    button.appendChild(document.createTextNode('Añadir'));
+                    button.addEventListener('click', await createAddNomadJobHandler(sortedTags[j]));
+                    li.appendChild(button);
                 }
+
+                elementList.appendChild(li);
             }
-        })
-        .catch(function (error) {
-            console.log(error);
-            alert("Error en la llamada al servidor: " + error.response.data);
-        });
+        }
+    }
 }
 
-function createAddNomadJobHandler(tag) {
-    return function() {
+async function createAddNomadJobHandler(tag) {
+    return async function() {
         const dockerUrl = document.getElementById("dockerUrl").value;
         const nomadUrl = document.getElementById("nomadUrl").value;
         const li = this.parentNode;
         const nameSpan = li.querySelector('span:first-child').textContent;
-        addNomadJob(dockerUrl, nomadUrl, nameSpan, tag);
+        await startJob(dockerUrl, nomadUrl, nameSpan, tag);
     };
-}
-
-function addNomadJob(dockerUrl, nomadUrl, appName, appVersion) {
-    console.log(`Lanzando nomad job: ${dockerUrl}, ${nomadUrl}, ${appName}, ${appVersion}`);
-    startJob(dockerUrl, nomadUrl, appName, appVersion);
 }

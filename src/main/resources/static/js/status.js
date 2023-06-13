@@ -1,19 +1,15 @@
-function checkUrl(idCampoUrl, idCheck, urlStatusValue) {
-    const url = document.getElementById(idCampoUrl).value;
-    axios.get('/status/server?serverUrl='.concat(url))
-        .then(response => {
-            const status = response.data;
-            console.log(`El estado es: ${status}`);
-            const resultadoDiv = document.getElementById(idCheck);
-            if (status) {
-                resultadoDiv.innerHTML = '<h3>&#x2705;</h3>';
-                urlStatusValue.key = true;
-            } else {
-                resultadoDiv.innerHTML = '<h3>&#x274C;</h3>';
-                urlStatusValue.key = false;
-            }
-        })
-        .catch(error => {
-            console.error('Error al obtener el estado de la URL:', error);
-        });
+async function checkUrl(idFieldUrl, idCheck, urlStatusValue) {
+    const url = document.getElementById(idFieldUrl).value;
+
+    const path = "/status/server?serverUrl=".concat(url)
+    const data = await getRequest(path);
+
+    const resultDiv = document.getElementById(idCheck);
+    if (data) {
+        resultDiv.innerHTML = '<h3>&#x2705;</h3>';
+        urlStatusValue.key = true;
+    } else {
+        resultDiv.innerHTML = '<h3>&#x274C;</h3>';
+        urlStatusValue.key = false;
+    }
 }
