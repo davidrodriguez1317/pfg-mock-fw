@@ -1,6 +1,10 @@
 let dockerUrlStatus = { key: false };
 let nomadUrlStatus = { key: false };
 let runningJobsPollingTime = 10;
+let currentNomadJob = "";
+let currentNomadTag = "";
+let envsMap = new Map();
+
 
 document.addEventListener('DOMContentLoaded', function() {
     axios.get('/configuration')
@@ -50,6 +54,7 @@ async function postRequest(path, body) {
         return response.data;
     } catch (error) {
         printError(error);
+        printErrorOnScreen(error);
         throw error;
     }
 }
@@ -62,6 +67,7 @@ async function deleteRequest(path) {
         return response.data;
     } catch (error) {
         printError(error);
+        printErrorOnScreen(error);
         throw error;
     }
 }
@@ -70,6 +76,14 @@ function printError(error) {
     const alertString = "Received status"
         .concat(error.response.status)
         .concat(". Error: ")
-        .concat(error.response);
+        .concat(error.response.data);
     console.error(alertString);
+}
+
+function printErrorOnScreen(error) {
+    const alertString = "Received status"
+        .concat(error.response.status)
+        .concat(". Error: ")
+        .concat(error.response.data);
+    alert(alertString);
 }

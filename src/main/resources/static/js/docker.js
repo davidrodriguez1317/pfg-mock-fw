@@ -34,7 +34,7 @@ async function listDockerRegistryImages() {
                     const button = document.createElement('button');
                     button.type = "button";
                     button.appendChild(document.createTextNode('Añadir'));
-                    button.addEventListener('click', await createAddNomadJobHandler(sortedTags[j]));
+                    button.addEventListener('click', await setNomadVarsAndGetEnvs(sortedTags[j]));
                     li.appendChild(button);
                 }
 
@@ -44,12 +44,11 @@ async function listDockerRegistryImages() {
     }
 }
 
-async function createAddNomadJobHandler(tag) {
+async function setNomadVarsAndGetEnvs(tag) {
     return async function() {
-        const dockerUrl = document.getElementById("dockerUrl").value;
-        const nomadUrl = document.getElementById("nomadUrl").value;
         const li = this.parentNode;
-        const nameSpan = li.querySelector('span:first-child').textContent;
-        await startJob(dockerUrl, nomadUrl, nameSpan, tag);
+        currentNomadJob = li.querySelector('span:first-child').textContent;
+        currentNomadTag = tag;
+        await getEnvs();
     };
 }

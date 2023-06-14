@@ -138,3 +138,8 @@ button[type="button"]:hover {
 #docker-registry-images li button, #docker-registry-containers li button {
     margin-left: 10px;
 }
+
+.key-value-entry {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

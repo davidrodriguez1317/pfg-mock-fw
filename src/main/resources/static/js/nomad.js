@@ -33,16 +33,14 @@ async function listNomadRunningJobs() {
             status.appendChild(document.createTextNode(job.status.toLowerCase()));
             li.appendChild(status);
 
-            if (job.status === "RUNNING") {
-                const button = document.createElement('button');
-                button.type = "button";
-                button.classList.add("stop-button");
-                button.appendChild(document.createTextNode('Parar'));
-                button.addEventListener('click', function () {
-                    stopNomadJob(job.id);
-                });
-                li.appendChild(button);
-            }
+            const button = document.createElement('button');
+            button.type = "button";
+            button.classList.add("stop-button");
+            button.appendChild(document.createTextNode('Eliminar'));
+            button.addEventListener('click', function () {
+                stopNomadJob(job.id);
+            });
+            li.appendChild(button);
 
             elementList.appendChild(li);
         });
@@ -65,12 +63,17 @@ async function stopNomadJob(jobName) {
 }
 
 
-async function startJob(dockerUrl, nomadUrl, appName, appVersion) {
+async function startJob(appName, appVersion, eMap) {
+
+    const dockerUrl = document.getElementById("dockerUrl").value;
+    const nomadUrl = document.getElementById("nomadUrl").value;
+
     const body = {
         dockerUrl: dockerUrl,
         nomadUrl: nomadUrl,
         appName: appName,
-        appVersion: appVersion
+        appVersion: appVersion,
+        envs: Object.fromEntries(eMap)
     };
 
     await postRequest("/nomad/start", body);

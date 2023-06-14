@@ -8,6 +8,7 @@
         <script src="../js/status.js"></script>
         <script src="../js/docker.js"></script>
         <script src="../js/nomad.js"></script>
+        <script src="../js/envs.js"></script>
         <link rel="stylesheet" href="../css/styles.css">
     </head>
     <body>
@@ -30,6 +31,20 @@
             <div class="url-list">
                 <ul id="docker-registry-images"></ul>
             </div>
+        </div>
+        <div id="docker-images-envs" style="display: none;">
+            <label for="envs-key-input">Clave:</label>
+            <input type="text" id="envs-key-input">
+            <label for="envs-value-input">Valor:</label>
+            <input type="text" id="envs-value-input">
+            <button type="button" onclick="addKeyValuePair()">Agregar env</button>
+
+            <button type="button" onclick="launchJobWithEnvs()">Lanzar job</button>
+            <button type="button" onclick="cleanLaunchJobWithEnvs()">Cancelar</button>
+            <br>
+            <div id="envs-key-value-pairs"></div>
+            <hr>
+            <br>
         </div>
         <div class="url-container">
             <h2>Jobs de nomad fijos <button type="button" onclick="listFixedNomadJobs()">Listar</button></h2>
