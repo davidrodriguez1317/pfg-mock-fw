@@ -8,8 +8,10 @@ function addKeyValuePair() {
     const value = document.getElementById("envs-value-input").value;
 
     const pairElement = document.createElement("div");
-    pairElement.className = "key-value-entry"
-    pairElement.innerHTML = `<input type="text" value="${key}" disabled> : <input type="text" value="${value}" disabled>`;
+    pairElement.className = "key-value-entry container-all-one-line";
+    pairElement.innerHTML = `
+        <input type="text" class="form-control" value="${key}" disabled>&nbsp:
+        <input type="text" class="form-control" value="${value}" disabled>`;
     document.getElementById("envs-key-value-pairs").appendChild(pairElement);
 
     document.getElementById("envs-key-input").value = "";
@@ -21,7 +23,7 @@ async function launchJobWithEnvs() {
     collectKeyValuePairs(envsMap, envPairs);
     console.log(envsMap);
     cleanLaunchJobWithEnvs();
-    await startJob(currentNomadJob, currentNomadTag, envsMap)
+    await startJob(currentNomadJob, currentNomadTag, envsMap);
 }
 
 function collectKeyValuePairs(aMap, pairs) {

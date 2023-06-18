@@ -8,8 +8,8 @@ async function listDockerRegistryImages() {
 
     const data = await getRequest(path);
 
-    if(data.length === 0) {
-        elementList.innerHTML = "No hay repositorios disponibles en Docker"
+    if (data.length === 0) {
+        elementList.innerHTML = "<div class='alert alert-info'>No hay repositorios disponibles en Docker</div>";
     } else {
         elementList.innerHTML = "";
 
@@ -17,25 +17,30 @@ async function listDockerRegistryImages() {
             if (data.hasOwnProperty(i)) {
                 const repository = data[i];
                 const li = document.createElement('li');
+                li.classList.add('list-group-item', 'justify-content-between', 'align-items-center');
 
                 const sortedTags = repository.tags.sort();
 
                 const nameSpan = document.createElement('span');
+                nameSpan.classList.add('fw-bold');
                 nameSpan.appendChild(document.createTextNode(repository.name));
                 li.appendChild(nameSpan);
 
-                li.appendChild(document.createTextNode(': '));
+                const tagContainer = document.createElement('span');
+                li.appendChild(tagContainer);
 
                 for (let j = 0; j < sortedTags.length; j++) {
                     const span = document.createElement('span');
+                    span.classList.add('badge', 'bg-primary', 'me-2');
                     span.appendChild(document.createTextNode(sortedTags[j]));
-                    li.appendChild(span);
+                    tagContainer.appendChild(span);
 
                     const button = document.createElement('button');
                     button.type = "button";
+                    button.classList.add('btn', 'btn-success', 'ms-2');
                     button.appendChild(document.createTextNode('Añadir'));
                     button.addEventListener('click', await setNomadVarsAndGetEnvs(sortedTags[j]));
-                    li.appendChild(button);
+                    tagContainer.appendChild(button);
                 }
 
                 elementList.appendChild(li);

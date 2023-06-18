@@ -1,6 +1,7 @@
 package com.dro.pfgmockfw.controller;
 
 import com.dro.pfgmockfw.service.StatusService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ public class ServerStatusController {
 
     @GetMapping("/server")
     @ResponseBody
-    public Mono<Boolean> checkStatus(@RequestParam String serverUrl) {
+    public Mono<Boolean> checkStatus(@RequestParam("serverUrl") @NotBlank String serverUrl) {
         log.info("Checking if server {} is active", serverUrl);
         return statusService.checkServerActive(serverUrl);
     }

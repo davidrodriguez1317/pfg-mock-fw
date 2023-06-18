@@ -11,7 +11,7 @@ async function listNomadRunningJobs() {
 
         data.forEach(function (job) {
             const li = document.createElement('li');
-            li.classList.add("job-item");
+            li.classList.add('list-group-item', 'justify-content-between', 'align-items-center');
 
             const jobLabel = document.createElement('span');
             jobLabel.classList.add("label-key-bold");
@@ -35,7 +35,7 @@ async function listNomadRunningJobs() {
 
             const button = document.createElement('button');
             button.type = "button";
-            button.classList.add("stop-button");
+            button.classList.add('btn', 'btn-success', 'ms-2');
             button.appendChild(document.createTextNode('Eliminar'));
             button.addEventListener('click', function () {
                 stopNomadJob(job.id);
@@ -62,9 +62,7 @@ async function stopNomadJob(jobName) {
     await deleteRequest(path);
 }
 
-
 async function startJob(appName, appVersion, eMap) {
-
     const dockerUrl = document.getElementById("dockerUrl").value;
     const nomadUrl = document.getElementById("nomadUrl").value;
 
@@ -79,7 +77,6 @@ async function startJob(appName, appVersion, eMap) {
     await postRequest("/nomad/start", body);
 }
 
-
 async function listFixedNomadJobs() {
     console.log("Getting fixed jobs from");
 
@@ -88,8 +85,8 @@ async function listFixedNomadJobs() {
 
     const elementList = document.getElementById('nomad-fixed-jobs');
 
-    if(data.length === 0) {
-        elementList.innerHTML = "No hay fixed jobs disponibles en el backend"
+    if (data.length === 0) {
+        elementList.innerHTML = "No hay jobs fijos disponibles en el backend";
     } else {
         elementList.innerHTML = "";
 
@@ -97,6 +94,7 @@ async function listFixedNomadJobs() {
             if (data.hasOwnProperty(i)) {
                 const fixedJob = data[i];
                 const li = document.createElement('li');
+                li.classList.add('list-group-item', 'justify-content-between', 'align-items-center');
 
                 const nameSpan = document.createElement('span');
                 nameSpan.appendChild(document.createTextNode(fixedJob.name + " " + fixedJob.version));
@@ -104,6 +102,7 @@ async function listFixedNomadJobs() {
 
                 const button = document.createElement('button');
                 button.type = "button";
+                button.classList.add('btn', 'btn-success', 'ms-2');
                 button.appendChild(document.createTextNode('Añadir'));
                 button.addEventListener('click', function () {
                     startFixedJob(data[i]);
@@ -117,5 +116,5 @@ async function listFixedNomadJobs() {
 
 async function startFixedJob(fixedJob) {
     fixedJob.nomadUrl = document.getElementById("nomadUrl").value;
-    await postRequest("/nomad/start-fixed-job", fixedJob)
+    await postRequest("/nomad/start-fixed-job", fixedJob);
 }

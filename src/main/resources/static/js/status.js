@@ -6,10 +6,10 @@ async function checkUrl(idFieldUrl, idCheck, urlStatusValue) {
 
     const resultDiv = document.getElementById(idCheck);
     if (data) {
-        resultDiv.innerHTML = '<h3>&#x2705;</h3>';
+        resultDiv.innerHTML = '<h3 class="url-check">&#x2705;</h3>';
         urlStatusValue.key = true;
     } else {
-        resultDiv.innerHTML = '<h3>&#x274C;</h3>';
+        resultDiv.innerHTML = '<h3 class="url-check">&#x274C;</h3>';
         urlStatusValue.key = false;
     }
 }

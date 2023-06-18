@@ -5,22 +5,18 @@ let currentNomadJob = "";
 let currentNomadTag = "";
 let envsMap = new Map();
 
-
 document.addEventListener('DOMContentLoaded', function() {
     axios.get('/configuration')
         .then(function(response) {
-
             runningJobsPollingTime = response.data.runningJobsPollingTime;
             console.log("runningJobsPollingTime: " + runningJobsPollingTime)
 
             setInterval(listNomadRunningJobs, runningJobsPollingTime * 1000);
-
         })
         .catch(function(error) {
             console.error('Error getting global variables:', error);
         });
 });
-
 
 async function getRequest(path) {
     console.log("GET request to: " + path);
