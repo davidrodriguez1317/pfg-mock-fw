@@ -2,6 +2,7 @@ package com.dro.pfgmockfw.controller;
 
 import com.dro.pfgmockfw.model.nomad.FixedJobDto;
 import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
+import com.dro.pfgmockfw.model.nomad.LocalJobDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.service.NomadService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -46,6 +48,14 @@ public class NomadController {
     public Mono<Boolean> startFixedJob(@RequestBody @Valid FixedJobDto fixedJobDto) {
         log.info("Starting fixed job {}", fixedJobDto.toString());
         return nomadService.startFixedJob(fixedJobDto);
+    }
+
+    @PostMapping("/start-local-job")
+    @ResponseBody
+    public Mono<Boolean> startLocalJob(@RequestBody @RequestParam("jarFile") MultipartFile jarFile,
+                                       @RequestParam("nomadUrl") @NotBlank String nomadUrl) {
+        log.info("Starting local job from file {}", jarFile.getName());
+        return nomadService.startLocalJob(jarFile, nomadUrl);
     }
 
     @PostMapping("/start")

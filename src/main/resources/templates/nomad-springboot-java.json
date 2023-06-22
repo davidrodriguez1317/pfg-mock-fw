@@ -1,0 +1,46 @@
+{
+  "Job": {
+    "Datacenters": [
+      "dc1"
+    ],
+    "ID": "%1$s",
+    "Name": "%1$s",
+    "TaskGroups": [
+      {
+        "Count": 1,
+        "Name": "pfg-springboot",
+        "Networks": [
+          {
+            "DynamicPorts": [
+              {
+                "HostNetwork": "default",
+                "Label": "http",
+                "To": 8080,
+                "Value": 0
+              }
+            ]
+          }
+        ],
+        "Tasks": [
+          {
+            "Config": {
+              "ports": [
+                "http"
+              ],
+              "jar_path": "%2$s",
+              "jvm_options": ["-Xmx256m", "-Xms128m"],
+              "network_mode": "host"
+            },
+            "Driver": "java",
+            "Name": "%1$s",
+            "Resources": {
+              "CPU": 500,
+              "MemoryMB": 256
+            }
+          }
+        ]
+      }
+    ],
+    "Type": "service"
+  }
+}

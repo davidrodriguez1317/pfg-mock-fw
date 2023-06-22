@@ -7,7 +7,11 @@ async function listNomadRunningJobs() {
     if (dockerUrlStatus.key && nomadUrlStatus.key) {
         const data = await getRequest(path);
 
-        elementList.innerHTML = "";
+        if(data.length === 0) {
+            elementList.innerHTML = "No hay jobs corriendo en Nomad"
+        } else {
+            elementList.innerHTML = "";
+        }
 
         data.forEach(function (job) {
             const li = document.createElement('li');

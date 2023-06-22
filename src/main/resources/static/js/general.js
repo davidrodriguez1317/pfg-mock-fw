@@ -55,6 +55,33 @@ async function postRequest(path, body) {
     }
 }
 
+async function postRequestMultiPart(path, file) {
+    const consoleString = "POST request with file to: "
+        .concat(path)
+        .concat(". File name: ")
+        .concat(file.name);
+
+    console.log(consoleString);
+
+    const formData = new FormData();
+    formData.append('jarFile', file);
+
+    try {
+        const response = await axios.post(path, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        console.log("Received status: " + response.status);
+        return response.data;
+    } catch (error) {
+        printError(error);
+        printErrorOnScreen(error);
+        throw error;
+    }
+}
+
 async function deleteRequest(path) {
     console.log("DELETE request to: ".concat(path));
     try {

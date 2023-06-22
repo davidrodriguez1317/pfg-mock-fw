@@ -39,7 +39,7 @@ async function listDockerRegistryImages() {
                     button.type = "button";
                     button.classList.add('btn', 'btn-success', 'ms-2');
                     button.appendChild(document.createTextNode('Añadir'));
-                    button.addEventListener('click', await setNomadVarsAndGetEnvs(sortedTags[j]));
+                    button.addEventListener('click', await setNomadVarsAndGetEnvs(repository.name, sortedTags[j]));
                     tagContainer.appendChild(button);
                 }
 
@@ -49,10 +49,9 @@ async function listDockerRegistryImages() {
     }
 }
 
-async function setNomadVarsAndGetEnvs(tag) {
+async function setNomadVarsAndGetEnvs(appName, tag) {
     return async function() {
-        const li = this.parentNode;
-        currentNomadJob = li.querySelector('span:first-child').textContent;
+        currentNomadJob = appName;
         currentNomadTag = tag;
         await getEnvs();
     };

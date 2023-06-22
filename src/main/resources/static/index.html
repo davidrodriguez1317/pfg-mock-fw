@@ -11,6 +11,8 @@
         <script src="../js/docker.js"></script>
         <script src="../js/nomad.js"></script>
         <script src="../js/envs.js"></script>
+        <script src="../js/dev-app.js"></script>
+        <script src="js/nomad.js"></script>
     </head>
     <body>
         <form>
@@ -61,6 +63,16 @@
                     <div class="url-list">
                         <ul id="nomad-fixed-jobs"></ul>
                     </div>
+                </div>
+                <div class="url-container">
+                    <h2 class="h2">Crear job para app en desarrollo <button class="btn btn-primary" type="button" onclick="createDevelopmentNomadJob()">Listar</button></h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="local-file">Seleccionar Archivo:</label>
+                            <input type="file" class="form-control-file" id="local-file">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="sendJarFile()">Subir</button>
+                    </form>
                 </div>
                 <div class="url-container">
                     <h2 class="h2">Jobs de Nomad</h2>
