@@ -2,8 +2,8 @@ package com.dro.pfgmockfw.service;
 
 import com.dro.pfgmockfw.client.NomadWebClient;
 import com.dro.pfgmockfw.mapper.NomadMapper;
-import com.dro.pfgmockfw.model.nomad.FixedJobDto;
-import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
+import com.dro.pfgmockfw.model.nomad.JobStartDto;
 import com.dro.pfgmockfw.model.nomad.JobStatusType;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
@@ -65,17 +65,17 @@ public class NomadServiceTest {
     public void testGetFixedJobs() {
 
         //given //when
-        Flux<FixedJobDto> fixedJobsFlux = nomadService.getFixedJobs();
+        Flux<FixedJobStartDto> fixedJobsFlux = nomadService.getFixedJobs();
 
         //then
-        List<FixedJobDto> fixedJobsList = fixedJobsFlux.collectList().block();
+        List<FixedJobStartDto> fixedJobsList = fixedJobsFlux.collectList().block();
         assertNotNull(fixedJobsList);
         assertEquals(1, fixedJobsList.size());
 
-        FixedJobDto fixedJobDto1 = fixedJobsList.get(0);
-        assertEquals("keycloak", fixedJobDto1.getName());
-        assertEquals("18.0", fixedJobDto1.getVersion());
-        assertEquals("nomad-keycloak-18.0.json", fixedJobDto1.getFileName());
+        FixedJobStartDto fixedJobStartDto1 = fixedJobsList.get(0);
+        assertEquals("keycloak", fixedJobStartDto1.getName());
+        assertEquals("18.0", fixedJobStartDto1.getVersion());
+        assertEquals("nomad-keycloak-18.0.json", fixedJobStartDto1.getFileName());
 
     }
 
@@ -85,7 +85,7 @@ public class NomadServiceTest {
         //given
         String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-job.json");
 
-        JobStartDataDto jobStartDataDto =  JobStartDataDto.builder()
+        JobStartDto jobStartDto =  JobStartDto.builder()
                 .dockerUrl("http://localhost:5000")
                 .nomadUrl("http://localhost:4646")
                 .appName("some-job")
@@ -95,10 +95,10 @@ public class NomadServiceTest {
 
 
         //when
-        nomadService.startJob(jobStartDataDto);
+        nomadService.startJob(jobStartDto);
 
         // then
-        verify(nomadWebClient).startJob(eq(jobStartDataDto.getNomadUrl()), jobCaptor.capture());
+        verify(nomadWebClient).startJob(eq(jobStartDto.getNomadUrl()), jobCaptor.capture());
 
         JSONAssert.assertEquals(expectedJob, jobCaptor.getValue(), false);
     }

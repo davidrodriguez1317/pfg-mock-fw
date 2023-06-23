@@ -1,17 +1,13 @@
 package com.dro.pfgmockfw.integration;
 
 import com.dro.pfgmockfw.integration.stubs.NomadStubs;
-import com.dro.pfgmockfw.integration.stubs.ServerStubs;
-import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
 @Slf4j
 public class NomadControllerStopJobTest extends BaseIntegrationTest {

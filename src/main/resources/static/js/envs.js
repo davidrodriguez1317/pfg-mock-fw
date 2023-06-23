@@ -1,29 +1,39 @@
-function getEnvs() {
+function getEnvs(envsDiv, divToHide) {
     envsMap = new Map();
-    document.getElementById("docker-images-envs").style.display = "block";
+    document.getElementById(envsDiv).style.display = "block";
+    document.getElementById(divToHide).style.display = "none";
+
 }
 
-function addKeyValuePair() {
-    const key = document.getElementById("envs-key-input").value;
-    const value = document.getElementById("envs-value-input").value;
+function addKeyValuePair(kvDiv, kDiv, vDiv) {
+    const key = document.getElementById(kDiv).value;
+    const value = document.getElementById(vDiv).value;
 
     const pairElement = document.createElement("div");
     pairElement.className = "key-value-entry container-all-one-line";
     pairElement.innerHTML = `
         <input type="text" class="form-control" value="${key}" disabled>&nbsp:
         <input type="text" class="form-control" value="${value}" disabled>`;
-    document.getElementById("envs-key-value-pairs").appendChild(pairElement);
+    document.getElementById(kvDiv).appendChild(pairElement);
 
-    document.getElementById("envs-key-input").value = "";
-    document.getElementById("envs-value-input").value = "";
+    document.getElementById(kDiv).value = "";
+    document.getElementById(vDiv).value = "";
 }
 
-async function launchJobWithEnvs() {
-    const envPairs = document.getElementById("envs-key-value-pairs").children;
+async function launchJobWithEnvs(kvDiv, envsDiv) {
+    const envPairs = document.getElementById(kvDiv).children;
     collectKeyValuePairs(envsMap, envPairs);
     console.log(envsMap);
-    cleanLaunchJobWithEnvs();
+    cleanLaunchJobWithEnvs(kvDiv, envsDiv);
     await startJob(currentNomadJob, currentNomadTag, envsMap);
+}
+
+async function launchLocalJobWithEnvs(kvDiv, envsDiv) {
+    const envPairs = document.getElementById(kvDiv).children;
+    collectKeyValuePairs(envsMap, envPairs);
+    console.log(envsMap);
+    cleanLaunchJobWithEnvs(kvDiv, envsDiv);
+    await startLocalJob(currentLocalNomadJob, envsMap);
 }
 
 function collectKeyValuePairs(aMap, pairs) {
@@ -34,7 +44,7 @@ function collectKeyValuePairs(aMap, pairs) {
     }
 }
 
-function cleanLaunchJobWithEnvs() {
-    document.getElementById("envs-key-value-pairs").innerHTML = "";
-    document.getElementById("docker-images-envs").style.display = "none";
+function cleanLaunchJobWithEnvs(kvDiv, envsDiv) {
+    document.getElementById(kvDiv).innerHTML = "";
+    document.getElementById(envsDiv).style.display = "none";
 }

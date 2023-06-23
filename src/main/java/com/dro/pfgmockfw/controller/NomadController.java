@@ -1,23 +1,19 @@
 package com.dro.pfgmockfw.controller;
 
-import com.dro.pfgmockfw.model.nomad.FixedJobDto;
-import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
-import com.dro.pfgmockfw.model.nomad.LocalJobDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
+import com.dro.pfgmockfw.model.nomad.JobStartDto;
+import com.dro.pfgmockfw.model.nomad.LocalJobStartDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.service.NomadService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Controller
@@ -38,31 +34,37 @@ public class NomadController {
 
     @GetMapping("/fixed-jobs")
     @ResponseBody
-    public Flux<FixedJobDto> listFixedJobs() {
+    public Flux<FixedJobStartDto> listFixedJobs() {
         log.info("Getting fixed jobs");
         return nomadService.getFixedJobs();
     }
 
     @PostMapping("/start-fixed-job")
     @ResponseBody
-    public Mono<Boolean> startFixedJob(@RequestBody @Valid FixedJobDto fixedJobDto) {
-        log.info("Starting fixed job {}", fixedJobDto.toString());
-        return nomadService.startFixedJob(fixedJobDto);
+    public Mono<Boolean> startFixedJob(@RequestBody @Valid FixedJobStartDto fixedJobStartDto) {
+        log.info("Starting fixed job {}", fixedJobStartDto.toString());
+        return nomadService.startFixedJob(fixedJobStartDto);
+    }
+
+    @PostMapping("/upload-local-job")
+    @ResponseBody
+    public Mono<Boolean> uploadJar(@RequestBody @RequestParam("jarFile") MultipartFile jarFile) {
+        log.info("Uploading file {}", jarFile.getOriginalFilename());
+        return nomadService.uploadJar(jarFile);
     }
 
     @PostMapping("/start-local-job")
     @ResponseBody
-    public Mono<Boolean> startLocalJob(@RequestBody @RequestParam("jarFile") MultipartFile jarFile,
-                                       @RequestParam("nomadUrl") @NotBlank String nomadUrl) {
-        log.info("Starting local job from file {}", jarFile.getName());
-        return nomadService.startLocalJob(jarFile, nomadUrl);
+    public Mono<Boolean> startLocalJob(@RequestBody @Valid LocalJobStartDto localJobStartDto) {
+        log.info("Starting local job {}",localJobStartDto);
+        return nomadService.startLocalJob(localJobStartDto);
     }
 
     @PostMapping("/start")
     @ResponseBody
-    public Mono<Boolean> startJob(@RequestBody @Valid JobStartDataDto jobStartDataDto) {
-        log.info("Starting nomad job for {}", jobStartDataDto);
-        return nomadService.startJob(jobStartDataDto);
+    public Mono<Boolean> startJob(@RequestBody @Valid JobStartDto jobStartDto) {
+        log.info("Starting nomad job for {}", jobStartDto);
+        return nomadService.startJob(jobStartDto);
     }
 
     @DeleteMapping("/stop")

@@ -4,13 +4,13 @@ import com.dro.pfgmockfw.client.NomadWebClient;
 import com.dro.pfgmockfw.config.MockFwProperties;
 import com.dro.pfgmockfw.exception.LaunchingLocalJobException;
 import com.dro.pfgmockfw.mapper.NomadMapper;
-import com.dro.pfgmockfw.model.nomad.FixedJobDto;
-import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
+import com.dro.pfgmockfw.model.nomad.JobStartDto;
+import com.dro.pfgmockfw.model.nomad.LocalJobStartDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
 import com.dro.pfgmockfw.utils.ResourceUtils;
 import com.dro.pfgmockfw.utils.StringUtils;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,35 +41,35 @@ public class NomadService {
         return serverRunningJobs.map(NomadMapper.INSTANCE::fromServerRunningJobDto);
     }
 
-    public Mono<Boolean> startJob(JobStartDataDto jobStartDataDto) {
+    public Mono<Boolean> startJob(JobStartDto jobStartDto) {
 
-        String imageName = StringUtils.stripHttpFromUrl(jobStartDataDto.getDockerUrl())
+        String imageName = StringUtils.stripHttpFromUrl(jobStartDto.getDockerUrl())
                 .concat("/")
-                .concat(jobStartDataDto.getAppName())
+                .concat(jobStartDto.getAppName())
                 .concat(":")
-                .concat(jobStartDataDto.getAppVersion());
+                .concat(jobStartDto.getAppVersion());
 
-        String envsAsString = jobStartDataDto.getEnvs().entrySet().stream()
+        String envsAsString = jobStartDto.getEnvs().entrySet().stream()
                 .map(entry -> "\"" + entry.getKey() + "\" : \"" + entry.getValue() + "\"")
                 .collect(Collectors.joining(","));
 
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-docker.json");
-        String job = String.format(jsonTemplate, jobStartDataDto.getAppName(), imageName, envsAsString);
+        String job = String.format(jsonTemplate, jobStartDto.getAppName(), imageName, envsAsString);
         
-        return nomadWebClient.startJob(jobStartDataDto.getNomadUrl(), job);
+        return nomadWebClient.startJob(jobStartDto.getNomadUrl(), job);
     }
 
     public Mono<Boolean> stopAndPurgeJob(String nomadUrl, String appName) {
         return nomadWebClient.stopAndPurgeJob(nomadUrl, appName);
     }
 
-    public Flux<FixedJobDto> getFixedJobs() {
+    public Flux<FixedJobStartDto> getFixedJobs() {
         List<String> fileNames = ResourceUtils.listFilesFromDirectory("fixed-templates");
         return Flux.fromIterable(parseFixedJobDtoFromFilenames(fileNames));
     }
 
-    private static List<FixedJobDto> parseFixedJobDtoFromFilenames(final List<String> filenames) {
-        List<FixedJobDto> fixedJobDtos = new ArrayList<>();
+    private static List<FixedJobStartDto> parseFixedJobDtoFromFilenames(final List<String> filenames) {
+        List<FixedJobStartDto> fixedJobStartDtos = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("nomad-(\\w+)-(\\d+\\.\\d+)\\.json");
 
@@ -80,28 +80,28 @@ public class NomadService {
                 String appName = matcher.group(1);
                 String appVersion = matcher.group(2);
 
-                FixedJobDto fixedJobDto = FixedJobDto.builder()
+                FixedJobStartDto fixedJobStartDto = FixedJobStartDto.builder()
                         .name(appName)
                         .version(appVersion)
                         .fileName(filename)
                         .build();
 
-                fixedJobDtos.add(fixedJobDto);
+                fixedJobStartDtos.add(fixedJobStartDto);
             }
         }
 
-        return fixedJobDtos;
+        return fixedJobStartDtos;
     }
 
-    public Mono<Boolean> startFixedJob(final FixedJobDto fixedJobDto) {
+    public Mono<Boolean> startFixedJob(final FixedJobStartDto fixedJobStartDto) {
 
-        String jobFileLocation = "fixed-templates/".concat(fixedJobDto.getFileName());
+        String jobFileLocation = "fixed-templates/".concat(fixedJobStartDto.getFileName());
         String job = ResourceUtils.getStringFromResources(jobFileLocation);
 
-        return nomadWebClient.startJob(fixedJobDto.getNomadUrl(), job);
+        return nomadWebClient.startJob(fixedJobStartDto.getNomadUrl(), job);
     }
 
-    public Mono<Boolean> startLocalJob(MultipartFile jarFile, String nomadUrl) {
+    public Mono<Boolean> uploadJar(MultipartFile jarFile) {
         String fileName = jarFile.getOriginalFilename();
         assert fileName != null;
         String localPath = mockFwProperties.getLocalShareFolderPath().concat(fileName);
@@ -111,11 +111,17 @@ public class NomadService {
         } catch (IOException ex) {
             throw new LaunchingLocalJobException("Error while copying jar", ex);
         }
+        return Mono.just(true);
+    }
+
+    public Mono<Boolean> startLocalJob( LocalJobStartDto localJobStartDto) {
+        String fileName = localJobStartDto.getFileName();
+        assert fileName != null;
 
         String vmPath = mockFwProperties.getVmShareFolderPath().concat(fileName);
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-java.json");
         String job = String.format(jsonTemplate, fileName, vmPath);
 
-        return nomadWebClient.startJob(nomadUrl, job);
+        return nomadWebClient.startJob(localJobStartDto.getNomadUrl(), job);
     }
 }

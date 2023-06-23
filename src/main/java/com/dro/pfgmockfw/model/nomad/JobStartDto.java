@@ -10,7 +10,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class JobStartDataDto {
+public class JobStartDto {
     @NotBlank
     private String dockerUrl;
 

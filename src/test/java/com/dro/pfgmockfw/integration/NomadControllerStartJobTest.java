@@ -1,7 +1,7 @@
 package com.dro.pfgmockfw.integration;
 
 import com.dro.pfgmockfw.integration.stubs.NomadStubs;
-import com.dro.pfgmockfw.model.nomad.JobStartDataDto;
+import com.dro.pfgmockfw.model.nomad.JobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    private static final JobStartDataDto jobStartDataDto = JobStartDataDto.builder()
+    private static final JobStartDto JOB_START_DTO = JobStartDto.builder()
             .dockerUrl("http://localhost:5001")
             .nomadUrl("http://localhost:8888")
             .appName("first-app")
@@ -34,7 +34,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
         //when //then
         webTestClient.post()
                 .uri("/nomad/start")
-                .body(BodyInserters.fromValue(jobStartDataDto))
+                .body(BodyInserters.fromValue(JOB_START_DTO))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)
@@ -51,7 +51,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
         // when //then
         webTestClient.post()
                 .uri("/nomad/start")
-                .body(BodyInserters.fromValue(new JobStartDataDto()))
+                .body(BodyInserters.fromValue(new JobStartDto()))
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -66,7 +66,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
         //when //then
         webTestClient.post()
                 .uri("/nomad/start")
-                .body(BodyInserters.fromValue(jobStartDataDto))
+                .body(BodyInserters.fromValue(JOB_START_DTO))
                 .exchange()
                 .expectStatus().is5xxServerError();
 
@@ -80,7 +80,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
         //when //then
         webTestClient.post()
                 .uri("/nomad/start")
-                .body(BodyInserters.fromValue(jobStartDataDto))
+                .body(BodyInserters.fromValue(JOB_START_DTO))
                 .exchange()
                 .expectStatus().isNotFound();
 

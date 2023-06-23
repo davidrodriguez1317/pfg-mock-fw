@@ -1,6 +1,6 @@
 package com.dro.pfgmockfw.integration;
 
-import com.dro.pfgmockfw.model.nomad.FixedJobDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -25,18 +25,18 @@ public class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
                 .uri("/nomad/fixed-jobs")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(FixedJobDto[].class)
+                .expectBody(FixedJobStartDto[].class)
                 .returnResult();
 
         // then
-        FixedJobDto[] fixedJobDtos = result.getResponseBody();
-        assertNotNull(fixedJobDtos);
-        assertEquals(1, fixedJobDtos.length);
+        FixedJobStartDto[] fixedJobStartDtos = result.getResponseBody();
+        assertNotNull(fixedJobStartDtos);
+        assertEquals(1, fixedJobStartDtos.length);
 
-        assertEquals("keycloak", fixedJobDtos[0].getName());
-        assertEquals("18.0", fixedJobDtos[0].getVersion());
-        assertEquals("nomad-keycloak-18.0.json", fixedJobDtos[0].getFileName());
-        assertNull(fixedJobDtos[0].getNomadUrl());
+        assertEquals("keycloak", fixedJobStartDtos[0].getName());
+        assertEquals("18.0", fixedJobStartDtos[0].getVersion());
+        assertEquals("nomad-keycloak-18.0.json", fixedJobStartDtos[0].getFileName());
+        assertNull(fixedJobStartDtos[0].getNomadUrl());
 
     }
 

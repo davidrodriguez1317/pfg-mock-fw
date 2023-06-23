@@ -77,3 +77,13 @@ span {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
 }
+
+/* Hiding Browse button */
+.custom-file-input ~ .custom-file-label::after {
+    opacity: 0;
+    content: "";
+}
+
+.custom-file-label {
+    margin-right: 1em;
+}

@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
-public class JobStopDataDto {
+public class JobStopDto {
 
     @NotBlank
     private String nomadUrl;

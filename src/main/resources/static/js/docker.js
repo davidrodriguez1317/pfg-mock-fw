@@ -53,6 +53,6 @@ async function setNomadVarsAndGetEnvs(appName, tag) {
     return async function() {
         currentNomadJob = appName;
         currentNomadTag = tag;
-        await getEnvs();
+        await getEnvs('docker-images-envs', 'loc-docker-images-envs');
     };
 }

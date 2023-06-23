@@ -1,7 +1,7 @@
 package com.dro.pfgmockfw.integration;
 
 import com.dro.pfgmockfw.integration.stubs.NomadStubs;
-import com.dro.pfgmockfw.model.nomad.FixedJobDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ public class NomadControllerStartFixedJobTest extends BaseIntegrationTest {
     private WebTestClient webTestClient;
 
 
-    private static final FixedJobDto fixedJobStartDataDto = FixedJobDto.builder()
+    private static final FixedJobStartDto fixedJobStartDataDto = FixedJobStartDto.builder()
             .nomadUrl("http://localhost:8888")
             .name("keycloak")
             .version("18.0")
@@ -51,7 +51,7 @@ public class NomadControllerStartFixedJobTest extends BaseIntegrationTest {
         // when //then
         webTestClient.post()
                 .uri("/nomad/start-fixed-job")
-                .body(BodyInserters.fromValue(new FixedJobDto()))
+                .body(BodyInserters.fromValue(new FixedJobStartDto()))
                 .exchange()
                 .expectStatus().isBadRequest();
 

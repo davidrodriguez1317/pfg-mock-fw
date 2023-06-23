@@ -10,7 +10,7 @@ spring:
       max-request-size: 1000MB
 
 app:
-  running-jobs-polling-time: 10
+  running-jobs-polling-time: 15
   local-share-folder-path: 'C:\Users\david\Documents\vm_share\'
   vm-share-folder-path: '/home/osboxes/Documentos/vm_share/'
 

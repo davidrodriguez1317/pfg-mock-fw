@@ -2,6 +2,7 @@ let dockerUrlStatus = { key: false };
 let nomadUrlStatus = { key: false };
 let runningJobsPollingTime = 10;
 let currentNomadJob = "";
+let currentLocalNomadJob = "";
 let currentNomadTag = "";
 let envsMap = new Map();
 

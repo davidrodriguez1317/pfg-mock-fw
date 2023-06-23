@@ -10,15 +10,15 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FixedJobDto {
+public class LocalJobStartDto {
+
     @NotBlank
     private String nomadUrl;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String version;
+
     @NotBlank
     private String fileName;
 
-    private Map<String, String> envVariables;
+    private Map<String, String> envs;
+
 }
+
