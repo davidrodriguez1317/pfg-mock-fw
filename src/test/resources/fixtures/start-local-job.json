@@ -9,28 +9,13 @@
       {
         "Count": 1,
         "Name": "pfg-springboot",
-        "Networks": [
-          {
-            "DynamicPorts": [
-              {
-                "HostNetwork": "default",
-                "Label": "http",
-                "To": 8080,
-                "Value": 0
-              }
-            ]
-          }
-        ],
         "Tasks": [
           {
             "Config": {
-              "ports": [
-                "http"
-              ],
-              "image": "localhost:5000/some-job:1.0.0-SNAPSHOT",
-              "network_mode": "host"
+              "command": "java",
+              "args": ["-jar", "/some/path/some-job.jar"]
             },
-            "Driver": "docker",
+            "Driver": "raw_exec",
             "Env": {
               "ENV_1" : "value1",
               "ENV_2" : "value2"

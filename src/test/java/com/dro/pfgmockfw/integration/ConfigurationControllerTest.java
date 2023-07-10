@@ -25,7 +25,7 @@ public class ConfigurationControllerTest extends BaseIntegrationTest {
     public void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
         //given
         var configuration = ConfigurationResponseDto.builder()
-                .runningJobsPollingTime(5)
+                .runningJobsPollingTime(15)
                 .build();
 
         //when

@@ -1,11 +1,9 @@
 package com.dro.pfgmockfw.service;
 
 import com.dro.pfgmockfw.client.NomadWebClient;
+import com.dro.pfgmockfw.config.MockFwProperties;
 import com.dro.pfgmockfw.mapper.NomadMapper;
-import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
-import com.dro.pfgmockfw.model.nomad.JobStartDto;
-import com.dro.pfgmockfw.model.nomad.JobStatusType;
-import com.dro.pfgmockfw.model.nomad.RunningJobDto;
+import com.dro.pfgmockfw.model.nomad.*;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
 import com.dro.pfgmockfw.utils.ResourceUtils;
 import org.json.JSONException;
@@ -17,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -33,6 +32,9 @@ public class NomadServiceTest {
 
     @Mock
     private NomadWebClient nomadWebClient;
+
+    @Mock
+    private MockFwProperties mockFwProperties;
 
     @InjectMocks
     private NomadService nomadService;
@@ -99,6 +101,30 @@ public class NomadServiceTest {
 
         // then
         verify(nomadWebClient).startJob(eq(jobStartDto.getNomadUrl()), jobCaptor.capture());
+
+        JSONAssert.assertEquals(expectedJob, jobCaptor.getValue(), false);
+    }
+
+    @Test
+    public void testStartLocalJob() throws JSONException {
+
+        //given
+        String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-local-job.json");
+
+        LocalJobStartDto localJobStartDto =  LocalJobStartDto.builder()
+                .nomadUrl("http://localhost:4646")
+                .name("some-job.jar")
+                .envs(Map.of("ENV_1", "value1", "ENV_2", "value2"))
+                .build();
+
+        when(mockFwProperties.getVmShareFolderPath()).thenReturn("/some/path/");
+
+
+        //when
+        nomadService.startLocalJob(localJobStartDto);
+
+        // then
+        verify(nomadWebClient).startJob(eq(localJobStartDto.getNomadUrl()), jobCaptor.capture());
 
         JSONAssert.assertEquals(expectedJob, jobCaptor.getValue(), false);
     }

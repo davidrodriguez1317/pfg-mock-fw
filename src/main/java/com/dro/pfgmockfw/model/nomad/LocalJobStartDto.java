@@ -16,7 +16,7 @@ public class LocalJobStartDto {
     private String nomadUrl;
 
     @NotBlank
-    private String fileName;
+    private String name;
 
     private Map<String, String> envs;
 
