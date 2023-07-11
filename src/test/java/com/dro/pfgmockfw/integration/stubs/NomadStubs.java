@@ -74,4 +74,40 @@ public class NomadStubs {
                         .withStatus(httpStatus)));
 
     }
+
+    public static void stubNomadGetAllocations(){
+        String bodyResponse = ResourceUtils.getStringFromResources("responses/nomad-allocations.json");
+
+        stubFor(get(urlPathMatching("\\/v1\\/job\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyResponse)));
+
+    }
+
+    public static void stubNomadGetAllocationsWithStatus(int httpStatus){
+        stubFor(get(urlPathMatching("\\/v1\\/job\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(httpStatus)));
+
+    }
+
+    public static void stubNomadGetLogs(){
+        String bodyResponse = ResourceUtils.getStringFromResources("responses/nomad-logs-base64.json");
+
+        stubFor(get(urlPathMatching("\\/v1\\/client\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(bodyResponse)));
+
+    }
+
+    public static void stubNomadGetLogsWithStatus(int httpStatus){
+        stubFor(get(urlPathMatching("\\/v1\\/client\\/.*"))
+                .willReturn(aResponse()
+                        .withStatus(httpStatus)));
+
+    }
 }

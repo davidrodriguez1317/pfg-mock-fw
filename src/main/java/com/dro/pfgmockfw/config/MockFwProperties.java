@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class MockFwProperties {
 
     private int runningJobsPollingTime;
+    private int allowedLogLines;
     private String localShareFolderPath;
     private String vmShareFolderPath;
 

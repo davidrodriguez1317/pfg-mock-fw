@@ -3,6 +3,8 @@ package com.dro.pfgmockfw.client;
 import com.dro.pfgmockfw.exception.EnumDoesNotExistException;
 import com.dro.pfgmockfw.exception.WebClientResponseException;
 import com.dro.pfgmockfw.exception.WebClientTechnicalException;
+import com.dro.pfgmockfw.model.nomad.JobAllocationDto;
+import com.dro.pfgmockfw.model.nomad.JobLogsDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerJobStopDto;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
@@ -78,6 +80,40 @@ public class NomadWebClient {
                         response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
                 .bodyToMono(ServerJobStopDto.class)
                 .map(stopDto -> Objects.nonNull(stopDto) && Strings.isNotBlank(stopDto.getEvalId()));
+
+    }
+
+    public Flux<JobAllocationDto> getAllocationsForJob(final String nomadUrl, final String jobId) {
+
+        String uri = String.format("%s/v1/job/%s/allocations", nomadUrl, jobId);
+        log.info("Getting allocations from ".concat(uri));
+
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError,
+                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                .onStatus(HttpStatusCode::is5xxServerError,
+                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                .bodyToMono(JobAllocationDto[].class)
+                .flatMapMany(Flux::fromArray)
+                .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
+    }
+
+    public Mono<JobLogsDto> getLogsForAllocation(final String nomadUrl, final String jobName, final String allocationId) {
+
+        String uri = String.format("%s/v1/client/fs/logs/%s?offset=0&origin=end&task=%s&type=stdout", nomadUrl, allocationId, jobName);
+
+        log.info("Reading logs from " + uri);
+
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError,
+                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                .onStatus(HttpStatusCode::is5xxServerError,
+                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                .bodyToMono(JobLogsDto.class);
 
     }
 

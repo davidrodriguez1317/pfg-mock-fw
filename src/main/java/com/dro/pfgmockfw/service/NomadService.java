@@ -3,16 +3,15 @@ package com.dro.pfgmockfw.service;
 import com.dro.pfgmockfw.client.NomadWebClient;
 import com.dro.pfgmockfw.config.MockFwProperties;
 import com.dro.pfgmockfw.exception.LaunchingLocalJobException;
+import com.dro.pfgmockfw.exception.NoDataAvailableException;
 import com.dro.pfgmockfw.mapper.NomadMapper;
-import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
-import com.dro.pfgmockfw.model.nomad.JobStartDto;
-import com.dro.pfgmockfw.model.nomad.LocalJobStartDto;
-import com.dro.pfgmockfw.model.nomad.RunningJobDto;
+import com.dro.pfgmockfw.model.nomad.*;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
 import com.dro.pfgmockfw.utils.ResourceUtils;
 import com.dro.pfgmockfw.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -24,6 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -114,14 +115,13 @@ public class NomadService {
         return Mono.just(true);
     }
 
-    public Mono<Boolean> startLocalJob( LocalJobStartDto localJobStartDto) {
+    public Mono<Boolean> startLocalJob(final LocalJobStartDto localJobStartDto) {
         String name = localJobStartDto.getName();
         assert name != null;
 
         String vmPath = mockFwProperties.getVmShareFolderPath().concat(name);
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-raw.json");
         String nameWithoutExtension = StringUtils.removeFileExtension(name);
-
 
         String envsAsString = localJobStartDto.getEnvs().entrySet().stream()
                 .map(entry -> "\"" + entry.getKey() + "\" : \"" + entry.getValue() + "\"")
@@ -130,5 +130,34 @@ public class NomadService {
         String job = String.format(jsonTemplate, nameWithoutExtension, vmPath, envsAsString);
 
         return nomadWebClient.startJob(localJobStartDto.getNomadUrl(), job);
+    }
+
+    public String getLogs(final String nomadUrl, final String jobName) {
+
+        final String allocationId = getAllocationForJob(nomadUrl, jobName).getId();
+
+        final String base64Logs = getLogsForAllocation(nomadUrl, jobName, allocationId);
+
+        final String decodedLogs = StringUtils.decodeFromBase64(base64Logs);
+
+        return StringUtils.getLastLines(decodedLogs, mockFwProperties.getAllowedLogLines());
+    }
+
+    private JobAllocationDto getAllocationForJob(final String nomadUrl, final String jobName) {
+
+        return Optional.ofNullable(nomadWebClient.getAllocationsForJob(nomadUrl, jobName)
+                .switchIfEmpty(Mono.error(new NoDataAvailableException("No allocation available")))
+                .reduce((max, current) -> max.getJobVersion().compareTo(current.getJobVersion()) >= 0 ? max : current)
+                .block())
+                .orElseThrow(() -> new NoDataAvailableException("No allocation available"));
+    }
+
+    private String getLogsForAllocation(final String nomadUrl, final String jobName, final String allocation) {
+
+        JobLogsDto jobLogsDto = nomadWebClient.getLogsForAllocation(nomadUrl, jobName, allocation).block();
+
+        return Optional.ofNullable(jobLogsDto)
+                .map(JobLogsDto::getData)
+                .orElse(Strings.EMPTY);
     }
 }

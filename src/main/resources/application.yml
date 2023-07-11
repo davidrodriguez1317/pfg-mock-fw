@@ -9,8 +9,12 @@ spring:
       max-file-size: 1000MB
       max-request-size: 1000MB
 
+server:
+  port: 10000
+
 app:
   running-jobs-polling-time: 15
+  allowed-log-lines: 250
   local-share-folder-path: 'C:\Users\david\Documents\vm_share\'
   vm-share-folder-path: '/home/osboxes/Documentos/vm_share/'
 

@@ -47,4 +47,59 @@ class StringUtilsTest {
         String result4 = StringUtils.removeFileExtension(fileName4);
         assertEquals(expected4, result4);
     }
+
+    @Test
+    public void testDecodeFromBase64() {
+        //given
+        String encodedString = "SGVsbG8gV29ybGQh";
+        String expectedDecodedString = "Hello World!";
+
+        //when
+        String decodedString = StringUtils.decodeFromBase64(encodedString);
+
+        //then
+        assertEquals(expectedDecodedString, decodedString);
+    }
+
+    @Test
+    public void testGetLastLines() {
+        //given
+        String input = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n";
+        int allowedLines = 3;
+        String expectedLastLines = "Line 4\nLine 5\nLine 6";
+
+        //when
+        String lastLines = StringUtils.getLastLines(input, allowedLines);
+
+        //then
+        assertEquals(expectedLastLines, lastLines);
+    }
+
+    @Test
+    public void testGetLastLinesWithNullInput() {
+        //given
+        String input = null;
+        int allowedLines = 3;
+        String expectedLastLines = "";
+
+        //when
+        String lastLines = StringUtils.getLastLines(input, allowedLines);
+
+        //then
+        assertEquals(expectedLastLines, lastLines);
+    }
+
+    @Test
+    public void testGetLastLinesWithZeroAllowedLines() {
+        //given
+        String input = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n";
+        int allowedLines = 0;
+        String expectedLastLines = "";
+
+        //when
+        String lastLines = StringUtils.getLastLines(input, allowedLines);
+
+        //then
+        assertEquals(expectedLastLines, lastLines);
+    }
 }

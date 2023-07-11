@@ -5,10 +5,13 @@ import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class StringUtils {
@@ -26,6 +29,18 @@ public class StringUtils {
             return fileName.substring(0, dotIndex);
         }
         return fileName;
+    }
+
+    public static String decodeFromBase64(String encodedString) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+        return new String(decodedBytes, StandardCharsets.UTF_8);
+    }
+
+    public static String getLastLines(final String input, final int allowedLines) {
+        return input == null ? ""
+                : Arrays.stream(input.split("\n"))
+                .skip(Math.max(0, input.lines().count() - allowedLines))
+                .collect(Collectors.joining("\n"));
     }
 
 }
