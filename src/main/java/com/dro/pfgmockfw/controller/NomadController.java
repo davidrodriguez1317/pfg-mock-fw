@@ -77,7 +77,7 @@ public class NomadController {
 
     @GetMapping("/logs")
     @ResponseBody
-    public String getLogs(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
+    public Flux<String> getLogs(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
                                                 @RequestParam (name = "jobName") @Valid String jobName) {
         log.info("Getting logs for {} in {}", jobName, nomadUrl);
         return nomadService.getLogs(nomadUrl, jobName);

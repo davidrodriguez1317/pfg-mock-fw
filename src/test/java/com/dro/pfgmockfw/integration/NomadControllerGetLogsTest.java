@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.List;
+
 import static com.dro.pfgmockfw.integration.stubs.NomadStubs.stubNomadGetAllocations;
 import static com.dro.pfgmockfw.integration.stubs.NomadStubs.stubNomadGetLogs;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,11 +39,11 @@ public class NomadControllerGetLogsTest extends BaseIntegrationTest {
                 .uri("/nomad/logs?nomadUrl=http://localhost:8888&jobName=mi-job-3")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class)
+                .expectBodyList(String.class)
                 .returnResult();
 
         // then
-        String logs = result.getResponseBody();
+        String logs = String.join("\n", result.getResponseBody());
         assertThat(logs).isEqualToNormalizingNewlines(expectedLogs);
 
     }

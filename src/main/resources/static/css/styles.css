@@ -87,3 +87,23 @@ span {
 .custom-file-label {
     margin-right: 1em;
 }
+
+/* Logs have small font */
+.log-lines > p {
+    font-size: 0.6em;
+    margin-bottom: 0.1em;
+    color: blue;
+}
+
+.log-lines .odd {
+    color: darkgreen;
+}
+
+/* Line at the end of each logs div */
+.app-logs::after {
+    content: "";
+    display: block;
+    height: 2mm;
+    background-color: black;
+    margin-top: 3mm;
+}

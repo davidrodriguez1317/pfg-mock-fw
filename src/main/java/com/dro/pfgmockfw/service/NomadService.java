@@ -132,7 +132,7 @@ public class NomadService {
         return nomadWebClient.startJob(localJobStartDto.getNomadUrl(), job);
     }
 
-    public String getLogs(final String nomadUrl, final String jobName) {
+    public Flux<String> getLogs(final String nomadUrl, final String jobName) {
 
         final String allocationId = getAllocationForJob(nomadUrl, jobName).getId();
 

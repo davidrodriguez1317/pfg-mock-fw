@@ -1,12 +1,14 @@
 async function sendJarFile() {
     const localFileInput = document.getElementById('local-file');
 
-    if (localFileInput.files.length > 0) {
-        currentLocalNomadJob = localFileInput.files[0].name;
-        await postRequestMultiPart('/nomad/upload-local-job', localFileInput.files[0])
-        await getEnvs('loc-docker-images-envs', 'docker-images-envs');
-    } else {
-        alert('No se seleccionó ninguna app para desplegar en Nomad')
+    if (dockerUrlStatus.key && nomadUrlStatus.key) {
+        if (localFileInput.files.length > 0) {
+            currentLocalNomadJob = localFileInput.files[0].name;
+            await postRequestMultiPart('/nomad/upload-local-job', localFileInput.files[0])
+            await getEnvs('loc-docker-images-envs', 'docker-images-envs');
+        } else {
+            alert('No se seleccionó ninguna app para desplegar en Nomad')
+        }
     }
 }
 

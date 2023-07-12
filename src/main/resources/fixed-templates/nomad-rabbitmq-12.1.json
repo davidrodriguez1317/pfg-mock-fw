@@ -1,0 +1,56 @@
+{
+  "Job": {
+    "Datacenters": [
+      "dc1"
+    ],
+    "ID": "rabbitmq",
+    "Name": "rabbitmq",
+    "TaskGroups": [
+      {
+        "Count": 1,
+        "Name": "pfg-springboot",
+        "Networks": [
+          {
+            "DynamicPorts": [
+              {
+                "HostNetwork": "default",
+                "Label": "rabbitmq",
+                "To": 5672,
+                "Value": 0
+              },
+              {
+                "HostNetwork": "default",
+                "Label": "rabbitmq-management",
+                "To": 15672,
+                "Value": 0
+              }
+            ]
+          }
+        ],
+        "Tasks": [
+          {
+            "Config": {
+              "ports": [
+                "rabbitmq",
+                "rabbitmq-management"
+              ],
+              "image": "rabbitmq:3.12.1-management",
+              "network_mode": "host"
+            },
+            "Driver": "docker",
+            "Env": {
+              "RABBITMQ_DEFAULT_USER": "guest",
+              "RABBITMQ_DEFAULT_PASS": "guest"
+            },
+            "Name": "rabbitmq",
+            "Resources": {
+              "CPU": 500,
+              "MemoryMB": 512
+            }
+          }
+        ]
+      }
+    ],
+    "Type": "service"
+  }
+}

@@ -1,7 +1,7 @@
 async function listNomadRunningJobs() {
+
     const elementList = document.getElementById('nomad-jobs');
     const nomadUrl = document.getElementById("nomadUrl").value;
-
     const path = '/nomad/jobs?nomadUrl='.concat(nomadUrl);
 
     if (dockerUrlStatus.key && nomadUrlStatus.key) {
@@ -37,14 +37,24 @@ async function listNomadRunningJobs() {
             status.appendChild(document.createTextNode(job.status.toLowerCase()));
             li.appendChild(status);
 
-            const button = document.createElement('button');
-            button.type = "button";
-            button.classList.add('btn', 'btn-success', 'ms-2');
-            button.appendChild(document.createTextNode('Eliminar'));
-            button.addEventListener('click', function () {
+
+            const buttonLogs = document.createElement('button');
+            buttonLogs.type = "button";
+            buttonLogs.classList.add('btn', 'btn-success', 'ms-2', 'medium-margin-left');
+            buttonLogs.appendChild(document.createTextNode('Logs'));
+            buttonLogs.addEventListener('click', function () {
+                addNomadLogs(job.id);
+            });
+            li.appendChild(buttonLogs);
+
+            const buttonRemove = document.createElement('button');
+            buttonRemove.type = "button";
+            buttonRemove.classList.add('btn', 'btn-danger', 'ms-2');
+            buttonRemove.appendChild(document.createTextNode('Eliminar'));
+            buttonRemove.addEventListener('click', function () {
                 stopNomadJob(job.id);
             });
-            li.appendChild(button);
+            li.appendChild(buttonRemove);
 
             elementList.appendChild(li);
         });
@@ -64,6 +74,10 @@ async function stopNomadJob(jobName) {
         .concat(jobName);
 
     await deleteRequest(path);
+
+    const divId = "logs-".concat(jobName);
+    let appLogsContainer = document.getElementById(divId);
+    appLogsContainer.remove();
 }
 
 async function startJob(appName, appVersion, eMap) {
@@ -82,37 +96,39 @@ async function startJob(appName, appVersion, eMap) {
 }
 
 async function listFixedNomadJobs() {
-    console.log("Getting fixed jobs from");
+    console.log("Getting fixed jobs");
 
-    const path = "/nomad/fixed-jobs";
-    const data = await getRequest(path);
+    if (dockerUrlStatus.key && nomadUrlStatus.key) {
+        const path = "/nomad/fixed-jobs";
+        const data = await getRequest(path);
 
-    const elementList = document.getElementById('nomad-fixed-jobs');
+        const elementList = document.getElementById('nomad-fixed-jobs');
 
-    if (data.length === 0) {
-        elementList.innerHTML = "No hay jobs fijos disponibles en el backend";
-    } else {
-        elementList.innerHTML = "";
+        if (data.length === 0) {
+            elementList.innerHTML = "No hay jobs fijos disponibles en el backend";
+        } else {
+            elementList.innerHTML = "";
 
-        for (const i in data) {
-            if (data.hasOwnProperty(i)) {
-                const fixedJob = data[i];
-                const li = document.createElement('li');
-                li.classList.add('list-group-item', 'justify-content-between', 'align-items-center');
+            for (const i in data) {
+                if (data.hasOwnProperty(i)) {
+                    const fixedJob = data[i];
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item', 'justify-content-between', 'align-items-center');
 
-                const nameSpan = document.createElement('span');
-                nameSpan.appendChild(document.createTextNode(fixedJob.name + " " + fixedJob.version));
-                li.appendChild(nameSpan);
+                    const nameSpan = document.createElement('span');
+                    nameSpan.appendChild(document.createTextNode(fixedJob.name + " " + fixedJob.version));
+                    li.appendChild(nameSpan);
 
-                const button = document.createElement('button');
-                button.type = "button";
-                button.classList.add('btn', 'btn-success', 'ms-2');
-                button.appendChild(document.createTextNode('Añadir'));
-                button.addEventListener('click', function () {
-                    startFixedJob(data[i]);
-                });
-                li.appendChild(button);
-                elementList.appendChild(li);
+                    const button = document.createElement('button');
+                    button.type = "button";
+                    button.classList.add('btn', 'btn-success', 'ms-2');
+                    button.appendChild(document.createTextNode('Añadir'));
+                    button.addEventListener('click', function () {
+                        startFixedJob(data[i]);
+                    });
+                    li.appendChild(button);
+                    elementList.appendChild(li);
+                }
             }
         }
     }
@@ -121,4 +137,72 @@ async function listFixedNomadJobs() {
 async function startFixedJob(fixedJob) {
     fixedJob.nomadUrl = document.getElementById("nomadUrl").value;
     await postRequest("/nomad/start-fixed-job", fixedJob);
+}
+
+async function addNomadLogs(jobId) {
+
+    const logsContainer = document.getElementById('nomad-logs');
+    const divId = "logs-".concat(jobId);
+    const data = await getLogsForJob(jobId);
+
+    if (data.length !== 0) {
+        let appLogsContainer = createDivIfNotExistOrEmptyIt(divId, logsContainer)
+
+        const appHeader = document.createElement('h4');
+        appHeader.textContent = 'Logs de ' + jobId;
+
+        const button = document.createElement('button');
+        button.type = "button";
+        button.classList.add('btn', 'btn-danger', 'ms-2', 'medium-margin-left');
+        button.appendChild(document.createTextNode('Eliminar'));
+        button.addEventListener('click', function () {
+            appLogsContainer.remove();
+        });
+        appHeader.appendChild(button);
+
+        const logLinesContainer = document.createElement('div');
+        logLinesContainer.classList.add('log-lines');
+
+        const lines = data.split("\n");
+
+        lines.forEach((line, index) => {
+            const lineElement = document.createElement("p");
+            lineElement.textContent = line;
+            if (index % 2 !== 0) {
+                lineElement.classList.add("odd");
+            }
+            logLinesContainer.appendChild(lineElement);
+        });
+
+        appLogsContainer.appendChild(appHeader);
+        appLogsContainer.appendChild(logLinesContainer);
+    }
+}
+
+function createDivIfNotExistOrEmptyIt(divId, parentDiv){
+    let appLogsContainer = document.getElementById(divId);
+
+    if (!appLogsContainer) {
+        appLogsContainer = document.createElement('div');
+        appLogsContainer.classList.add('app-logs');
+        appLogsContainer.id = divId;
+        parentDiv.appendChild(appLogsContainer);
+    } else {
+        while (appLogsContainer.firstChild) {
+            appLogsContainer.removeChild(appLogsContainer.firstChild);
+        }
+    }
+    return appLogsContainer;
+}
+
+
+async function getLogsForJob(jobName) {
+    let nomadUrl = document.getElementById("nomadUrl").value;
+
+    const path = '/nomad/logs?nomadUrl='
+        .concat(nomadUrl)
+        .concat("&jobName=")
+        .concat(jobName);
+
+    return await getRequest(path);
 }

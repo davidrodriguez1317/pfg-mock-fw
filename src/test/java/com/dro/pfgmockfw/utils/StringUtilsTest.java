@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -64,29 +68,61 @@ class StringUtilsTest {
     @Test
     public void testGetLastLines() {
         //given
-        String input = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n";
+        String input = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8";
         int allowedLines = 3;
-        String expectedLastLines = "Line 4\nLine 5\nLine 6";
 
         //when
-        String lastLines = StringUtils.getLastLines(input, allowedLines);
+        Flux<String> result = StringUtils.getLastLines(input, allowedLines);
 
         //then
-        assertEquals(expectedLastLines, lastLines);
+        List<String> resultList = result.collectList().block();
+        assertEquals("Line 6", resultList.get(0));
+        assertEquals("\n", resultList.get(1));
+        assertEquals("Line 7", resultList.get(2));
+        assertEquals("\n", resultList.get(3));
+        assertEquals("Line 8", resultList.get(4));
+        assertEquals("\n", resultList.get(5));
+    }
+
+    @Test
+    void testGetLastLinesWithInputAndAllowedLinesGreaterThanInputLines() {
+        //given
+        String input = "Line 1\nLine 2\nLine 3";
+        int allowedLines = 5;
+
+        //when
+        Flux<String> result = StringUtils.getLastLines(input, allowedLines);
+
+        //then
+        List<String> resultList = result.collectList().block();
+        assertEquals("Line 1", resultList.get(0));
+        assertEquals("\n", resultList.get(1));
+        assertEquals("Line 2", resultList.get(2));
+        assertEquals("\n", resultList.get(3));
+        assertEquals("Line 3", resultList.get(4));
+        assertEquals("\n", resultList.get(5));
     }
 
     @Test
     public void testGetLastLinesWithNullInput() {
-        //given
-        String input = null;
-        int allowedLines = 3;
-        String expectedLastLines = "";
-
-        //when
-        String lastLines = StringUtils.getLastLines(input, allowedLines);
+        //given //when
+        Flux<String> result = StringUtils.getLastLines(null, 5);
 
         //then
-        assertEquals(expectedLastLines, lastLines);
+        StepVerifier.create(result)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void testGetLastLinesWithEmptyInput() {
+        //given //when
+        Flux<String> result = StringUtils.getLastLines("", 5);
+
+        //then
+        StepVerifier.create(result)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -94,10 +130,10 @@ class StringUtilsTest {
         //given
         String input = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\n";
         int allowedLines = 0;
-        String expectedLastLines = "";
+        List<String> expectedLastLines = List.of();
 
         //when
-        String lastLines = StringUtils.getLastLines(input, allowedLines);
+        List<String> lastLines = StringUtils.getLastLines(input, allowedLines).collectList().block();
 
         //then
         assertEquals(expectedLastLines, lastLines);

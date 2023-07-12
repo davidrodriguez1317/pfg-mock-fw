@@ -2,13 +2,13 @@ package com.dro.pfgmockfw.utils;
 
 import com.dro.pfgmockfw.exception.NoDataAvailableException;
 import lombok.experimental.UtilityClass;
+import org.apache.logging.log4j.util.Strings;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,11 +36,12 @@ public class StringUtils {
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 
-    public static String getLastLines(final String input, final int allowedLines) {
-        return input == null ? ""
-                : Arrays.stream(input.split("\n"))
-                .skip(Math.max(0, input.lines().count() - allowedLines))
-                .collect(Collectors.joining("\n"));
+    public static Flux<String> getLastLines(final String input, final int allowedLines) {
+        return Strings.isBlank(input)
+                ? Flux.empty()
+                : Flux.fromArray(input.split("\n"))
+                    .skip(Math.max(0, input.lines().count() - allowedLines))
+                    .concatMap(line -> Flux.just(line, "\n"));
     }
 
 }
