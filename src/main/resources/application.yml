@@ -14,7 +14,7 @@ server:
 
 app:
   running-jobs-polling-time: 15
-  allowed-log-lines: 250
+  allowed-log-characters: 25000
   local-share-folder-path: 'C:\Users\david\Documents\vm_share\'
   vm-share-folder-path: '/home/osboxes/Documentos/vm_share/'
 

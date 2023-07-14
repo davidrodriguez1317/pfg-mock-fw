@@ -31,13 +31,17 @@ public class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
         // then
         FixedJobStartDto[] fixedJobStartDtos = result.getResponseBody();
         assertNotNull(fixedJobStartDtos);
-        assertEquals(1, fixedJobStartDtos.length);
+        assertEquals(2, fixedJobStartDtos.length);
 
         assertEquals("keycloak", fixedJobStartDtos[0].getName());
         assertEquals("18.0", fixedJobStartDtos[0].getVersion());
         assertEquals("nomad-keycloak-18.0.json", fixedJobStartDtos[0].getFileName());
         assertNull(fixedJobStartDtos[0].getNomadUrl());
 
+        assertEquals("rabbitmq", fixedJobStartDtos[1].getName());
+        assertEquals("12.1", fixedJobStartDtos[1].getVersion());
+        assertEquals("nomad-rabbitmq-12.1.json", fixedJobStartDtos[1].getFileName());
+        assertNull(fixedJobStartDtos[1].getNomadUrl());
     }
 
 }

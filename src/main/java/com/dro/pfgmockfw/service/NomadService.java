@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,12 +115,12 @@ public class NomadService {
     }
 
     public Mono<Boolean> startLocalJob(final LocalJobStartDto localJobStartDto) {
-        String name = localJobStartDto.getName();
+        String name = localJobStartDto.getFileName();
         assert name != null;
 
         String vmPath = mockFwProperties.getVmShareFolderPath().concat(name);
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-raw.json");
-        String nameWithoutExtension = StringUtils.removeFileExtension(name);
+        String nameWithoutExtension = StringUtils.getServiceNameFromFileName(name);
 
         String envsAsString = localJobStartDto.getEnvs().entrySet().stream()
                 .map(entry -> "\"" + entry.getKey() + "\" : \"" + entry.getValue() + "\"")
@@ -137,10 +136,8 @@ public class NomadService {
         final String allocationId = getAllocationForJob(nomadUrl, jobName).getId();
 
         final String base64Logs = getLogsForAllocation(nomadUrl, jobName, allocationId);
-
-        final String decodedLogs = StringUtils.decodeFromBase64(base64Logs);
-
-        return StringUtils.getLastLines(decodedLogs, mockFwProperties.getAllowedLogLines());
+        
+        return Flux.just(StringUtils.decodeFromBase64(base64Logs));
     }
 
     private JobAllocationDto getAllocationForJob(final String nomadUrl, final String jobName) {
@@ -154,7 +151,8 @@ public class NomadService {
 
     private String getLogsForAllocation(final String nomadUrl, final String jobName, final String allocation) {
 
-        JobLogsDto jobLogsDto = nomadWebClient.getLogsForAllocation(nomadUrl, jobName, allocation).block();
+        JobLogsDto jobLogsDto = nomadWebClient.getLogsForAllocation(nomadUrl, jobName, allocation, mockFwProperties.getAllowedLogCharacters())
+                .block();
 
         return Optional.ofNullable(jobLogsDto)
                 .map(JobLogsDto::getData)

@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skyscreamer.jsonassert.JSONAssert;
-import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -72,13 +71,18 @@ public class NomadServiceTest {
         //then
         List<FixedJobStartDto> fixedJobsList = fixedJobsFlux.collectList().block();
         assertNotNull(fixedJobsList);
-        assertEquals(1, fixedJobsList.size());
+        assertEquals(2, fixedJobsList.size());
 
         FixedJobStartDto fixedJobStartDto1 = fixedJobsList.get(0);
         assertEquals("keycloak", fixedJobStartDto1.getName());
         assertEquals("18.0", fixedJobStartDto1.getVersion());
         assertEquals("nomad-keycloak-18.0.json", fixedJobStartDto1.getFileName());
 
+        FixedJobStartDto fixedJobStartDto2 = fixedJobsList.get(1);
+        assertEquals("rabbitmq", fixedJobStartDto2.getName());
+        assertEquals("12.1", fixedJobStartDto2.getVersion());
+        assertEquals("nomad-rabbitmq-12.1.json", fixedJobStartDto2.getFileName());
+        assertNull(fixedJobStartDto2.getNomadUrl());
     }
 
     @Test
@@ -113,7 +117,7 @@ public class NomadServiceTest {
 
         LocalJobStartDto localJobStartDto =  LocalJobStartDto.builder()
                 .nomadUrl("http://localhost:4646")
-                .name("some-job.jar")
+                .fileName("some-job-1.0.0-SNAPSHOT.jar")
                 .envs(Map.of("ENV_1", "value1", "ENV_2", "value2"))
                 .build();
 

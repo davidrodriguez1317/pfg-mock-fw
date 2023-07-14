@@ -13,7 +13,7 @@
           {
             "Config": {
               "command": "java",
-              "args": ["-jar", "/some/path/some-job.jar"]
+              "args": ["-jar", "/some/path/some-job-1.0.0-SNAPSHOT.jar"]
             },
             "Driver": "raw_exec",
             "Env": {

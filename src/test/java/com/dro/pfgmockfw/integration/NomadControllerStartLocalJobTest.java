@@ -22,7 +22,7 @@ public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
     private static final LocalJobStartDto localJobStartDataDto = LocalJobStartDto.builder()
             .nomadUrl("http://localhost:8888")
-            .name("some-job.jar")
+            .fileName("some-job.jar")
             .envs(Map.of("ENV_1", "VALUE_1", "ENV_2", "VALUE_2"))
             .build();
 

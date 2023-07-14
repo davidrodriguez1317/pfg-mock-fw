@@ -100,9 +100,13 @@ public class NomadWebClient {
                 .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
     }
 
-    public Mono<JobLogsDto> getLogsForAllocation(final String nomadUrl, final String jobName, final String allocationId) {
+    public Mono<JobLogsDto> getLogsForAllocation(final String nomadUrl,
+                                                 final String jobName,
+                                                 final String allocationId,
+                                                 final int allowedCharacters) {
 
-        String uri = String.format("%s/v1/client/fs/logs/%s?offset=0&origin=end&task=%s&type=stdout", nomadUrl, allocationId, jobName);
+        String uri = String.format("%s/v1/client/fs/logs/%s?offset=%d&origin=end&task=%s&type=stdout",
+                nomadUrl, allocationId, allowedCharacters, jobName);
 
         log.info("Reading logs from " + uri);
 

@@ -1,17 +1,11 @@
 package com.dro.pfgmockfw.utils;
 
-import com.dro.pfgmockfw.exception.NoDataAvailableException;
 import lombok.experimental.UtilityClass;
 import org.apache.logging.log4j.util.Strings;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class StringUtils {
@@ -23,12 +17,22 @@ public class StringUtils {
         return matcher.replaceFirst("");
     }
 
-    public String removeFileExtension(String fileName) {
+    public String getServiceNameFromFileName(String fileName) {
         int dotIndex = fileName.lastIndexOf(".");
         if (dotIndex != -1) {
-            return fileName.substring(0, dotIndex);
+            return removeVersion(fileName.substring(0, dotIndex));
         }
-        return fileName;
+        return removeVersion(fileName);
+    }
+
+    public static String removeVersion(String cadena) {
+        String regex = "([a-zA-Z-]+)(-\\d+\\.\\d+\\.\\d+)?(-SNAPSHOT)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(cadena);
+        if (matcher.matches()) {
+            return  matcher.group(1);
+        }
+        return Strings.EMPTY;
     }
 
     public static String decodeFromBase64(String encodedString) {
@@ -36,12 +40,5 @@ public class StringUtils {
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 
-    public static Flux<String> getLastLines(final String input, final int allowedLines) {
-        return Strings.isBlank(input)
-                ? Flux.empty()
-                : Flux.fromArray(input.split("\n"))
-                    .skip(Math.max(0, input.lines().count() - allowedLines))
-                    .concatMap(line -> Flux.just(line, "\n"));
-    }
 
 }
