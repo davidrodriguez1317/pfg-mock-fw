@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.Map;
 
 @ToString
 @Data

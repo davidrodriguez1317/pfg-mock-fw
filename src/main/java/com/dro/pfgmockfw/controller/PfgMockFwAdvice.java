@@ -9,8 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 
 @ControllerAdvice
 @Slf4j
@@ -32,14 +30,6 @@ public class PfgMockFwAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
-            MethodArgumentTypeMismatchException ex) {
-        String error = "The param '" + ex.getName() + "' has an invalid type. Expected one: " +
-                ex.getRequiredType().getSimpleName() + ".";
-        log.error(error, ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-    }
 
     @ExceptionHandler(WebClientTechnicalException.class)
     public ResponseEntity<String> handleWebClientTechnicalException(
@@ -55,14 +45,6 @@ public class PfgMockFwAdvice {
         String error = "There was a client error calling the server. Message: ".concat(ex.getMessage());
         log.error(error, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    @ExceptionHandler(WebClientRequestException.class)
-    public ResponseEntity<String> handleWebClientRequestException(
-            WebClientRequestException ex) {
-        String error = "Docker/Nomad is not available. Message: ".concat(ex.getMessage());
-        log.error(error, ex);
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
     }
 
     @ExceptionHandler(Exception.class)

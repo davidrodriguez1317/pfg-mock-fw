@@ -10,8 +10,11 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class StringUtils {
 
+    public static final String CLIENT_ERROR = "Client error: ";
+    public static final String SERVER_ERROR = "Server error: ";
+
     public static String stripHttpFromUrl(final String url) {
-        String regex = "^(http[s]?://)";
+        String regex = "^(https?://)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url);
         return matcher.replaceFirst("");

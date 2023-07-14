@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import static com.dro.pfgmockfw.utils.StringUtils.CLIENT_ERROR;
+import static com.dro.pfgmockfw.utils.StringUtils.SERVER_ERROR;
+
 
 @Slf4j
 @Service
@@ -27,9 +30,9 @@ public class DockerWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(RepositoriesResponseDto.class)
                 .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
     }
@@ -41,9 +44,9 @@ public class DockerWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(RepositoryWithTagsResponseDto.class)
                 .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
     }

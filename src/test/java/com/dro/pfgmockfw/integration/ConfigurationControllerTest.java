@@ -15,14 +15,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-public class ConfigurationControllerTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class ConfigurationControllerTest extends BaseIntegrationTest {
 
     @Test
-    public void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
+    void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
         //given
         var configuration = ConfigurationResponseDto.builder()
                 .runningJobsPollingTime(15)

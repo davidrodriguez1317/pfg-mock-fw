@@ -5,9 +5,7 @@ import com.dro.pfgmockfw.model.docker.RepositoryWithTagsResponseDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
@@ -15,14 +13,10 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class DockerControllerGetImagesTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
     @Test
-    public void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
+    void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
         //given
         var repoWithTags01 = RepositoryWithTagsResponseDto.builder()
                 .name("pfg-price-calculator")
@@ -50,12 +44,12 @@ public class DockerControllerGetImagesTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturnRepositoriesWithTags_whenResponseIsOkButNoContent() {
+    void shouldReturnRepositoriesWithTags_whenResponseIsOkButNoContent() {
         //given
         DockerStubs.stubDockerCatalogNoContent();
 
         //when //then
-        var result = webTestClient.get()
+        webTestClient.get()
                 .uri("/docker/images?dockerUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
@@ -69,7 +63,7 @@ public class DockerControllerGetImagesTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn400_whenArgumentsNotPresent() {
+    void shouldReturn400_whenArgumentsNotPresent() {
         //given //when //then
         webTestClient.get()
                 .uri("/docker/images")
@@ -79,7 +73,7 @@ public class DockerControllerGetImagesTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn400_whenArgumentsNotCorrect() {
+    void shouldReturn400_whenArgumentsNotCorrect() {
         //given //when //then
         webTestClient.get()
                 .uri("/docker/images?dockerUrlxxx=http://localhost:8888")
@@ -89,7 +83,7 @@ public class DockerControllerGetImagesTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn500_whenTechnicalExceptionInDocker() {
+    void shouldReturn500_whenTechnicalExceptionInDocker() {
         //given
         DockerStubs.stubDockerCatalogWithStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -102,7 +96,7 @@ public class DockerControllerGetImagesTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn404_whenWebClientResponseInDocker() {
+    void shouldReturn404_whenWebClientResponseInDocker() {
         //given
         DockerStubs.stubDockerCatalogWithStatus(HttpStatus.BAD_REQUEST.value());
 

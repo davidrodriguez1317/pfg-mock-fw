@@ -22,6 +22,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
+import static com.dro.pfgmockfw.utils.StringUtils.CLIENT_ERROR;
+import static com.dro.pfgmockfw.utils.StringUtils.SERVER_ERROR;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -36,9 +39,9 @@ public class NomadWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(ServerRunningJobDto[].class)
                 .flatMapMany(Flux::fromArray)
                 .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex))
@@ -57,9 +60,9 @@ public class NomadWebClient {
                 .body(BodyInserters.fromValue(job))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .toBodilessEntity()
                 .map(responseEntity -> responseEntity.getStatusCode().is2xxSuccessful());
 
@@ -75,9 +78,9 @@ public class NomadWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(ServerJobStopDto.class)
                 .map(stopDto -> Objects.nonNull(stopDto) && Strings.isNotBlank(stopDto.getEvalId()));
 
@@ -92,9 +95,9 @@ public class NomadWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(JobAllocationDto[].class)
                 .flatMapMany(Flux::fromArray)
                 .onErrorMap(JsonParseException.class, ex -> new WebClientResponseException("JSON parse error", ex));
@@ -114,9 +117,9 @@ public class NomadWebClient {
                 .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        response -> Mono.error(new WebClientResponseException("Client error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientResponseException(CLIENT_ERROR + response.statusCode())))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        response -> Mono.error(new WebClientTechnicalException("Server error: " + response.statusCode())))
+                        response -> Mono.error(new WebClientTechnicalException(SERVER_ERROR + response.statusCode())))
                 .bodyToMono(JobLogsDto.class);
 
     }

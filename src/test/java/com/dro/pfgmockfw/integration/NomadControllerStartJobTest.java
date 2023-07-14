@@ -5,18 +5,13 @@ import com.dro.pfgmockfw.model.nomad.JobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.Map;
 
 @Slf4j
-public class NomadControllerStartJobTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
+class NomadControllerStartJobTest extends BaseIntegrationTest {
 
     private static final JobStartDto JOB_START_DTO = JobStartDto.builder()
             .dockerUrl("http://localhost:5001")
@@ -27,7 +22,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
             .build();
 
     @Test
-    public void shouldStartJob_whenResponseIsOk() {
+    void shouldStartJob_whenResponseIsOk() {
         //given
         NomadStubs.stubNomadStartJob();
 
@@ -44,7 +39,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldReturn400_whenBodyNotValid() {
+    void shouldReturn400_whenBodyNotValid() {
         //given
         NomadStubs.stubNomadStartJob();
 
@@ -59,7 +54,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldReturn500_whenTechnicalExceptionInNomad() {
+    void shouldReturn500_whenTechnicalExceptionInNomad() {
         //given
         NomadStubs.stubNomadStartJobWithStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -73,7 +68,7 @@ public class NomadControllerStartJobTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn404_whenWebClientResponseInNomad() {
+    void shouldReturn404_whenWebClientResponseInNomad() {
         //given
         NomadStubs.stubNomadStartJobWithStatus(HttpStatus.BAD_REQUEST.value());
 

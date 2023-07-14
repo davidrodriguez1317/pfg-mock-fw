@@ -6,18 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 @Slf4j
-public class NomadControllerStopJobTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class NomadControllerStopJobTest extends BaseIntegrationTest {
 
     @Test
-    public void shouldStopJob_whenResponseIsOk_andEvalIdCorrect() {
+    void shouldStopJob_whenResponseIsOk_andEvalIdCorrect() {
         //given
         NomadStubs.stubNomadStopJobWithSuccess();
 
@@ -33,7 +27,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldNotStopJob_whenResponseIsOk_andEvalIdNotCorrect() {
+    void shouldNotStopJob_whenResponseIsOk_andEvalIdNotCorrect() {
         //given
         NomadStubs.stubNomadStopJobNoSuccess();
 
@@ -49,7 +43,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldReturn400_whenNotValidRequestParam() {
+    void shouldReturn400_whenNotValidRequestParam() {
         //given //when //then
         webTestClient.delete()
                 .uri("/nomad/stop?nomadUrlxxx=http://localhost:8888&jobName=some-job")
@@ -59,7 +53,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn400_whenArgumentNotPresent() {
+    void shouldReturn400_whenArgumentNotPresent() {
         //given //when //then
         webTestClient.delete()
                 .uri("/nomad/stop?nomadUrl=http://localhost:8888")
@@ -71,7 +65,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(ints = {400, 404})
-    public void shouldReturnNotFound_whenResponseIsNotHealthy(int httpStatus) {
+    void shouldReturnNotFound_whenResponseIsNotHealthy(int httpStatus) {
         //given
         NomadStubs.stubNomadStopJobWithStatus(httpStatus);
 
@@ -85,7 +79,7 @@ public class NomadControllerStopJobTest extends BaseIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(ints = {500, 503})
-    public void shouldReturnInternalServerError_whenResponseIsNotHealthy(int httpStatus) {
+    void shouldReturnInternalServerError_whenResponseIsNotHealthy(int httpStatus) {
         //given
         NomadStubs.stubNomadStopJobWithStatus(httpStatus);
 

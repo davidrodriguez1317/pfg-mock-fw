@@ -6,19 +6,13 @@ import com.dro.pfgmockfw.model.nomad.LocalJobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.Map;
 
 @Slf4j
-public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
     private static final LocalJobStartDto localJobStartDataDto = LocalJobStartDto.builder()
             .nomadUrl("http://localhost:8888")
@@ -28,7 +22,7 @@ public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldStartJob_whenResponseIsOk() {
+    void shouldStartJob_whenResponseIsOk() {
         //given
         NomadStubs.stubNomadStartJob();
 
@@ -46,7 +40,7 @@ public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldReturn400_whenBodyNotValid() {
+    void shouldReturn400_whenBodyNotValid() {
         //given
         NomadStubs.stubNomadStartJob();
 
@@ -61,7 +55,7 @@ public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
 
     @Test
-    public void shouldReturn500_whenTechnicalExceptionInNomad() {
+    void shouldReturn500_whenTechnicalExceptionInNomad() {
         //given
         NomadStubs.stubNomadStartJobWithStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -75,7 +69,7 @@ public class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn404_whenWebClientResponseInNomad() {
+    void shouldReturn404_whenWebClientResponseInNomad() {
         //given
         NomadStubs.stubNomadStartJobWithStatus(HttpStatus.BAD_REQUEST.value());
 

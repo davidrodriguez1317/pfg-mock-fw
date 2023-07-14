@@ -1,9 +1,5 @@
 package com.dro.pfgmockfw.utils;
 
-import org.junit.jupiter.api.Assertions;
-
-import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +11,4 @@ public class TestUtils {
                 .collect(Collectors.joining(","));
     }
 
-    public static String normalizeLineEndings(String input) {
-        return input.replaceAll("\\r\\n", "\n").replaceAll("\\r", "\n");
-    }
 }

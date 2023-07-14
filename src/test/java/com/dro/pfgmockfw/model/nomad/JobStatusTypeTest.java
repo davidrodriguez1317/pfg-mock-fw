@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JobStatusTypeTest {
+class JobStatusTypeTest {
 
     @Test
-    public void fromString_validValue_returnsCorrectJobStatusType() {
+    void fromString_validValue_returnsCorrectJobStatusType() {
         //given
         String value = "running";
 
@@ -20,7 +20,7 @@ public class JobStatusTypeTest {
     }
 
     @Test
-    public void fromString_invalidValue_EnumDoesNotExistException() {
+    void fromString_invalidValue_EnumDoesNotExistException() {
         //given
         String value = "invalid";
 

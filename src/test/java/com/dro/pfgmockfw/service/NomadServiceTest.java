@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class NomadServiceTest {
+class NomadServiceTest {
 
     @Mock
     private NomadWebClient nomadWebClient;
@@ -42,7 +42,7 @@ public class NomadServiceTest {
     private ArgumentCaptor<String> jobCaptor;
 
     @Test
-    public void getRunningJobs_returnsMonoOfRunningJobDtoArray() {
+    void getRunningJobs_returnsMonoOfRunningJobDtoArray() {
         //given
         ServerRunningJobDto[] jobDtos = new ServerRunningJobDto[]{
                 ServerRunningJobDto.builder().id("job1").status(JobStatusType.RUNNING).build(),
@@ -63,7 +63,7 @@ public class NomadServiceTest {
     }
 
     @Test
-    public void testGetFixedJobs() {
+    void testGetFixedJobs() {
 
         //given //when
         Flux<FixedJobStartDto> fixedJobsFlux = nomadService.getFixedJobs();
@@ -86,7 +86,7 @@ public class NomadServiceTest {
     }
 
     @Test
-    public void testStartJob() throws JSONException {
+    void testStartJob() throws JSONException {
 
         //given
         String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-job.json");
@@ -110,7 +110,7 @@ public class NomadServiceTest {
     }
 
     @Test
-    public void testStartLocalJob() throws JSONException {
+    void testStartLocalJob() throws JSONException {
 
         //given
         String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-local-job.json");

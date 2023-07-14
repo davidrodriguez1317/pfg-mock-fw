@@ -115,10 +115,10 @@ public class NomadService {
     }
 
     public Mono<Boolean> startLocalJob(final LocalJobStartDto localJobStartDto) {
-        String name = localJobStartDto.getFileName();
-        assert name != null;
 
+        String name = localJobStartDto.getFileName();
         String vmPath = mockFwProperties.getVmShareFolderPath().concat(name);
+
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-raw.json");
         String nameWithoutExtension = StringUtils.getServiceNameFromFileName(name);
 

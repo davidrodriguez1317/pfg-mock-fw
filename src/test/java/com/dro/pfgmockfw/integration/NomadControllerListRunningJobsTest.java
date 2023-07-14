@@ -6,22 +6,16 @@ import com.dro.pfgmockfw.model.nomad.RunningJobDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
     @Test
-    public void shouldReturnJobs_whenResponseIsOk() {
+    void shouldReturnJobs_whenResponseIsOk() {
         //given
         NomadStubs.stubNomadRunningJobs();
 
@@ -46,7 +40,7 @@ public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturnJobs_whenResponseIsOkButNoContent() {
+    void shouldReturnJobs_whenResponseIsOkButNoContent() {
         //given
         NomadStubs.stubNomadRunningJobsNoContent();
 
@@ -66,7 +60,7 @@ public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn400_whenArgumentsNotPresent() {
+    void shouldReturn400_whenArgumentsNotPresent() {
         //given //when //then
         webTestClient.get()
                 .uri("/nomad/jobs")
@@ -76,7 +70,7 @@ public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn400_whenArgumentsNotCorrect() {
+    void shouldReturn400_whenArgumentsNotCorrect() {
         //given //when //then
         webTestClient.get()
                 .uri("/nomad/jobs?nomadUrlxxx=http://localhost:8888")
@@ -86,7 +80,7 @@ public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn500_whenTechnicalExceptionInNomad() {
+    void shouldReturn500_whenTechnicalExceptionInNomad() {
         //given
         NomadStubs.stubNomadRunningJobsWithStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -99,7 +93,7 @@ public class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void shouldReturn404_whenWebClientResponseInNomad() {
+    void shouldReturn404_whenWebClientResponseInNomad() {
         //given
         NomadStubs.stubNomadRunningJobsWithStatus(HttpStatus.BAD_REQUEST.value());
 

@@ -23,7 +23,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testGetServiceNameFromFileName() {
+    void testGetServiceNameFromFileName() {
 
         String fileName1 = "pfg-product-cost-0.0.3-SNAPSHOT.jar";
         String resultado1 = StringUtils.getServiceNameFromFileName(fileName1);
@@ -39,7 +39,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testDecodeFromBase64() {
+    void testDecodeFromBase64() {
         //given
         String encodedString = "SGVsbG8gV29ybGQh";
         String expectedDecodedString = "Hello World!";

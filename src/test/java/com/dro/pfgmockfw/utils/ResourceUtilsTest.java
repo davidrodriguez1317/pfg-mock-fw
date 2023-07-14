@@ -4,14 +4,11 @@ import com.dro.pfgmockfw.exception.NoDataAvailableException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ResourceUtilsTest {
+class ResourceUtilsTest {
 
     @Test
     void givenExistingFilePath_whenGetStringFromResources_thenReturnStringContent() {
@@ -38,7 +35,7 @@ public class ResourceUtilsTest {
     }
 
     @Test
-    public void testListFilesFromDirectory() {
+    void testListFilesFromDirectory() {
         //given //when
         List<String> fileList = ResourceUtils.listFilesFromDirectory("responses");
 
@@ -47,7 +44,7 @@ public class ResourceUtilsTest {
     }
 
     @Test
-    public void testListFilesFromDirectory_whenEmpty() {
+    void testListFilesFromDirectory_whenEmpty() {
         //given //when //then
         assertThrows(NoDataAvailableException.class, () -> {
             ResourceUtils.listFilesFromDirectory("no_responses");

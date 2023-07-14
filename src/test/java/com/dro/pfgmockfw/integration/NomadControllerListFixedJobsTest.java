@@ -4,22 +4,16 @@ import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Slf4j
-public class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
+class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
 
     @Test
-    public void shouldReturnJobs_whenResponseIsOk() {
+    void shouldReturnJobs_whenResponseIsOk() {
         //given //when
         var result = webTestClient.get()
                 .uri("/nomad/fixed-jobs")
