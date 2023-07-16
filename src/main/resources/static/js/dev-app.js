@@ -1,28 +1,28 @@
 async function sendJarFile() {
     const localFileInput = document.getElementById('local-file');
 
-    if (dockerUrlStatus.key && nomadUrlStatus.key) {
+    if (platformUrlStatus.key && orchestratorUrlStatus.key) {
         if (localFileInput.files.length > 0) {
-            currentLocalNomadJob = localFileInput.files[0].name;
-            await postRequestMultiPart('/nomad/upload-local-job', localFileInput.files[0])
-            await getEnvs('loc-docker-images-envs', 'docker-images-envs');
+            currentLocalJob = localFileInput.files[0].name;
+            await postRequestMultiPart('/orchestrator/upload-local-job', localFileInput.files[0])
+            await getEnvs('loc-platform-images-envs', 'platform-images-envs');
         } else {
-            alert('No se seleccionó ninguna app para desplegar en Nomad')
+            alert('No se seleccionó ninguna app para desplegar en el orquestador')
         }
     }
 }
 
 
 async function startLocalJob(jarName, eMap) {
-    const nomadUrl = document.getElementById("nomadUrl").value;
+    const orchestratorUrl = document.getElementById("orchestratorUrl").value;
 
     const body = {
-        nomadUrl: nomadUrl,
-        fileName: currentLocalNomadJob,
+        orchestratorUrl: orchestratorUrl,
+        fileName: currentLocalJob,
         envs: Object.fromEntries(eMap)
     };
 
-    await postRequest( '/nomad/start-local-job', body);
+    await postRequest( '/orchestrator/start-local-job', body);
 }
 
 function updateFileName() {

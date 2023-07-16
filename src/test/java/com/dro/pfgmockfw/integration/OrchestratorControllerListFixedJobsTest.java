@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @Slf4j
-class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
+class OrchestratorControllerListFixedJobsTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnJobs_whenResponseIsOk() {
         //given //when
         var result = webTestClient.get()
-                .uri("/nomad/fixed-jobs")
+                .uri("/orchestrator/fixed-jobs")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(FixedJobStartDto[].class)
@@ -30,12 +30,12 @@ class NomadControllerListFixedJobsTest extends BaseIntegrationTest {
         assertEquals("keycloak", fixedJobStartDtos[0].getName());
         assertEquals("18.0", fixedJobStartDtos[0].getVersion());
         assertEquals("nomad-keycloak-18.0.json", fixedJobStartDtos[0].getFileName());
-        assertNull(fixedJobStartDtos[0].getNomadUrl());
+        assertNull(fixedJobStartDtos[0].getOrchestratorUrl());
 
         assertEquals("rabbitmq", fixedJobStartDtos[1].getName());
         assertEquals("12.1", fixedJobStartDtos[1].getVersion());
         assertEquals("nomad-rabbitmq-12.1.json", fixedJobStartDtos[1].getFileName());
-        assertNull(fixedJobStartDtos[1].getNomadUrl());
+        assertNull(fixedJobStartDtos[1].getOrchestratorUrl());
     }
 
 }

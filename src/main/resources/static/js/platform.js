@@ -1,15 +1,15 @@
-async function listDockerRegistryImages() {
-    const dockerUrl = document.getElementById("dockerUrl").value;
-    const elementList = document.getElementById('docker-registry-images');
+async function listPlatformImages() {
+    const platformUrl = document.getElementById("platformUrl").value;
+    const elementList = document.getElementById('platform-registry-images');
 
-    console.log("Getting docker images from --> " + dockerUrl);
+    console.log("Getting platform images from --> " + platformUrl);
 
-    const path = "/docker/images?dockerUrl=".concat(dockerUrl)
+    const path = "/platform/images?platformUrl=".concat(platformUrl)
 
     const data = await getRequest(path);
 
     if (data.length === 0) {
-        elementList.innerHTML = "<div class='alert alert-info'>No hay repositorios disponibles en Docker</div>";
+        elementList.innerHTML = "<div class='alert alert-info'>No hay repositorios disponibles en la plataforma</div>";
     } else {
         elementList.innerHTML = "";
 
@@ -39,7 +39,7 @@ async function listDockerRegistryImages() {
                     button.type = "button";
                     button.classList.add('btn', 'btn-success', 'ms-2');
                     button.appendChild(document.createTextNode('Añadir'));
-                    button.addEventListener('click', await setNomadVarsAndGetEnvs(repository.name, sortedTags[j]));
+                    button.addEventListener('click', await setVarsAndGetEnvs(repository.name, sortedTags[j]));
                     tagContainer.appendChild(button);
                 }
 
@@ -49,10 +49,10 @@ async function listDockerRegistryImages() {
     }
 }
 
-async function setNomadVarsAndGetEnvs(appName, tag) {
+async function setVarsAndGetEnvs(appName, tag) {
     return async function() {
-        currentNomadJob = appName;
-        currentNomadTag = tag;
-        await getEnvs('docker-images-envs', 'loc-docker-images-envs');
+        currentJob = appName;
+        currentTag = tag;
+        await getEnvs('platform-images-envs', 'loc-platform-images-envs');
     };
 }

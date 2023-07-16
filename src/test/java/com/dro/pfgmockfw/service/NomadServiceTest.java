@@ -82,7 +82,7 @@ class NomadServiceTest {
         assertEquals("rabbitmq", fixedJobStartDto2.getName());
         assertEquals("12.1", fixedJobStartDto2.getVersion());
         assertEquals("nomad-rabbitmq-12.1.json", fixedJobStartDto2.getFileName());
-        assertNull(fixedJobStartDto2.getNomadUrl());
+        assertNull(fixedJobStartDto2.getOrchestratorUrl());
     }
 
     @Test
@@ -92,8 +92,8 @@ class NomadServiceTest {
         String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-job.json");
 
         JobStartDto jobStartDto =  JobStartDto.builder()
-                .dockerUrl("http://localhost:5000")
-                .nomadUrl("http://localhost:4646")
+                .platformUrl("http://localhost:5000")
+                .orchestratorUrl("http://localhost:4646")
                 .appName("some-job")
                 .appVersion("1.0.0-SNAPSHOT")
                 .envs(Map.of("ENV_1", "value1", "ENV_2", "value2"))
@@ -104,7 +104,7 @@ class NomadServiceTest {
         nomadService.startJob(jobStartDto);
 
         // then
-        verify(nomadWebClient).startJob(eq(jobStartDto.getNomadUrl()), jobCaptor.capture());
+        verify(nomadWebClient).startJob(eq(jobStartDto.getOrchestratorUrl()), jobCaptor.capture());
 
         JSONAssert.assertEquals(expectedJob, jobCaptor.getValue(), false);
     }
@@ -116,7 +116,7 @@ class NomadServiceTest {
         String expectedJob = ResourceUtils.getStringFromResources("fixtures/start-local-job.json");
 
         LocalJobStartDto localJobStartDto =  LocalJobStartDto.builder()
-                .nomadUrl("http://localhost:4646")
+                .orchestratorUrl("http://localhost:4646")
                 .fileName("some-job-1.0.0-SNAPSHOT.jar")
                 .envs(Map.of("ENV_1", "value1", "ENV_2", "value2"))
                 .build();
@@ -128,7 +128,7 @@ class NomadServiceTest {
         nomadService.startLocalJob(localJobStartDto);
 
         // then
-        verify(nomadWebClient).startJob(eq(localJobStartDto.getNomadUrl()), jobCaptor.capture());
+        verify(nomadWebClient).startJob(eq(localJobStartDto.getOrchestratorUrl()), jobCaptor.capture());
 
         JSONAssert.assertEquals(expectedJob, jobCaptor.getValue(), false);
     }

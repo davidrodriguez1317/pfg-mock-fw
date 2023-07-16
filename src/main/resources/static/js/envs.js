@@ -25,7 +25,7 @@ async function launchJobWithEnvs(kvDiv, envsDiv) {
     collectKeyValuePairs(envsMap, envPairs);
     console.log(envsMap);
     cleanLaunchJobWithEnvs(kvDiv, envsDiv);
-    await startJob(currentNomadJob, currentNomadTag, envsMap);
+    await startJob(currentJob, currentTag, envsMap);
 }
 
 async function launchLocalJobWithEnvs(kvDiv, envsDiv) {
@@ -33,7 +33,7 @@ async function launchLocalJobWithEnvs(kvDiv, envsDiv) {
     collectKeyValuePairs(envsMap, envPairs);
     console.log(envsMap);
     cleanLaunchJobWithEnvs(kvDiv, envsDiv);
-    await startLocalJob(currentLocalNomadJob, envsMap);
+    await startLocalJob(currentLocalJob, envsMap);
 }
 
 function collectKeyValuePairs(aMap, pairs) {

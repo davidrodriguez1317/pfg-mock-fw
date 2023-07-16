@@ -12,7 +12,7 @@ import java.util.Map;
 @Getter
 public class FixedJobStartDto {
     @NotBlank
-    private String nomadUrl;
+    private String orchestratorUrl;
     @NotBlank
     private String name;
     @NotBlank

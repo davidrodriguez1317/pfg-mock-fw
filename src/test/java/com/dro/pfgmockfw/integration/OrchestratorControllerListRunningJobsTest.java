@@ -12,7 +12,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
+class OrchestratorControllerListRunningJobsTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnJobs_whenResponseIsOk() {
@@ -21,7 +21,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
         //when
         var result = webTestClient.get()
-                .uri("/nomad/jobs?nomadUrl=http://localhost:8888")
+                .uri("/orchestrator/jobs?orchestratorUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(RunningJobDto[].class)
@@ -46,7 +46,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
         //when
         var result = webTestClient.get()
-                .uri("/nomad/jobs?nomadUrl=http://localhost:8888")
+                .uri("/orchestrator/jobs?orchestratorUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(RunningJobDto[].class)
@@ -63,7 +63,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     void shouldReturn400_whenArgumentsNotPresent() {
         //given //when //then
         webTestClient.get()
-                .uri("/nomad/jobs")
+                .uri("/orchestrator/jobs")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -73,7 +73,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
     void shouldReturn400_whenArgumentsNotCorrect() {
         //given //when //then
         webTestClient.get()
-                .uri("/nomad/jobs?nomadUrlxxx=http://localhost:8888")
+                .uri("/orchestrator/jobs?orchestratorUrlxxx=http://localhost:8888")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -86,7 +86,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/nomad/jobs?nomadUrl=http://localhost:8888")
+                .uri("/orchestrator/jobs?orchestratorUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().is5xxServerError();
 
@@ -99,7 +99,7 @@ class NomadControllerListRunningJobsTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/nomad/jobs?nomadUrl=http://localhost:8888")
+                .uri("/orchestrator/jobs?orchestratorUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isNotFound();
 

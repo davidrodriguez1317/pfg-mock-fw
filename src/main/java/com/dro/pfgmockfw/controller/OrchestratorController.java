@@ -4,7 +4,7 @@ import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
 import com.dro.pfgmockfw.model.nomad.JobStartDto;
 import com.dro.pfgmockfw.model.nomad.LocalJobStartDto;
 import com.dro.pfgmockfw.model.nomad.RunningJobDto;
-import com.dro.pfgmockfw.service.NomadService;
+import com.dro.pfgmockfw.service.interfaces.OrchestratorService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -18,69 +18,69 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/nomad")
-public class NomadController {
+@RequestMapping("/orchestrator")
+public class OrchestratorController {
 
-    private final NomadService nomadService;
+    private final OrchestratorService orchestratorService;
 
     @GetMapping("/jobs")
     @ResponseBody
     public Flux<RunningJobDto> listRunningJobs(
-            @RequestParam("nomadUrl") @NotBlank String nomadUrl
+            @RequestParam("orchestratorUrl") @NotBlank String orchestratorUrl
     ) {
         log.info("Getting running jobs");
-        return nomadService.getRunningJobs(nomadUrl);
+        return orchestratorService.getRunningJobs(orchestratorUrl);
     }
 
     @GetMapping("/fixed-jobs")
     @ResponseBody
     public Flux<FixedJobStartDto> listFixedJobs() {
         log.info("Getting fixed jobs");
-        return nomadService.getFixedJobs();
+        return orchestratorService.getFixedJobs();
     }
 
     @PostMapping("/start-fixed-job")
     @ResponseBody
     public Mono<Boolean> startFixedJob(@RequestBody @Valid FixedJobStartDto fixedJobStartDto) {
         log.info("Starting fixed job {}", fixedJobStartDto.toString());
-        return nomadService.startFixedJob(fixedJobStartDto);
+        return orchestratorService.startFixedJob(fixedJobStartDto);
     }
 
     @PostMapping("/upload-local-job")
     @ResponseBody
     public Mono<Boolean> uploadJar(@RequestBody @RequestParam("jarFile") MultipartFile jarFile) {
         log.info("Uploading file {}", jarFile.getOriginalFilename());
-        return nomadService.uploadJar(jarFile);
+        return orchestratorService.uploadJar(jarFile);
     }
 
     @PostMapping("/start-local-job")
     @ResponseBody
     public Mono<Boolean> startLocalJob(@RequestBody @Valid LocalJobStartDto localJobStartDto) {
         log.info("Starting local job {}",localJobStartDto);
-        return nomadService.startLocalJob(localJobStartDto);
+        return orchestratorService.startLocalJob(localJobStartDto);
     }
 
     @PostMapping("/start")
     @ResponseBody
     public Mono<Boolean> startJob(@RequestBody @Valid JobStartDto jobStartDto) {
-        log.info("Starting nomad job for {}", jobStartDto);
-        return nomadService.startJob(jobStartDto);
+        log.info("Starting orchestrator job for {}", jobStartDto);
+        return orchestratorService.startJob(jobStartDto);
     }
 
     @DeleteMapping("/stop")
     @ResponseBody
-    public Mono<Boolean> stopAndPurgeJob(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
+    public Mono<Boolean> stopAndPurgeJob(@RequestParam (name = "orchestratorUrl") @Valid String orchestratorUrl,
                                          @RequestParam (name = "jobName") @Valid String jobName) {
-        log.info("Stopping nomad job {} in {}", jobName, nomadUrl);
-        return nomadService.stopAndPurgeJob(nomadUrl, jobName);
+        log.info("Stopping orchestrator job {} in {}", jobName, orchestratorUrl);
+        return orchestratorService.stopAndPurgeJob(orchestratorUrl, jobName);
     }
 
     @GetMapping("/logs")
     @ResponseBody
-    public Flux<String> getLogs(@RequestParam (name = "nomadUrl") @Valid String nomadUrl,
+    public Flux<String> getLogs(@RequestParam (name = "orchestratorUrl") @Valid String orchestratorUrl,
                                                 @RequestParam (name = "jobName") @Valid String jobName) {
-        log.info("Getting logs for {} in {}", jobName, nomadUrl);
-        return nomadService.getLogs(nomadUrl, jobName);
+        log.info("Getting logs for {} in {}", jobName, orchestratorUrl);
+        return orchestratorService.getLogs(orchestratorUrl, jobName);
     }
 
 }

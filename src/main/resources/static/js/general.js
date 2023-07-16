@@ -1,9 +1,9 @@
-let dockerUrlStatus = { key: false };
-let nomadUrlStatus = { key: false };
+let platformUrlStatus = { key: false };
+let orchestratorUrlStatus = { key: false };
 let runningJobsPollingTime = 10;
-let currentNomadJob = "";
-let currentLocalNomadJob = "";
-let currentNomadTag = "";
+let currentJob = "";
+let currentLocalJob = "";
+let currentTag = "";
 let envsMap = new Map();
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             runningJobsPollingTime = response.data.runningJobsPollingTime;
             console.log("runningJobsPollingTime: " + runningJobsPollingTime)
 
-            setInterval(listNomadRunningJobs, runningJobsPollingTime * 1000);
+            setInterval(listRunningJobs, runningJobsPollingTime * 1000);
         })
         .catch(function(error) {
             console.error('Error getting global variables:', error);

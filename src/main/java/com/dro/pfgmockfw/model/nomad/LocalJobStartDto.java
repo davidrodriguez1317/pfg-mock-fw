@@ -13,7 +13,7 @@ import java.util.Map;
 public class LocalJobStartDto {
 
     @NotBlank
-    private String nomadUrl;
+    private String orchestratorUrl;
 
     @NotBlank
     private String fileName;

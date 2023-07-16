@@ -1,14 +1,14 @@
-async function listNomadRunningJobs() {
+async function listRunningJobs() {
 
-    const elementList = document.getElementById('nomad-jobs');
-    const nomadUrl = document.getElementById("nomadUrl").value;
-    const path = '/nomad/jobs?nomadUrl='.concat(nomadUrl);
+    const elementList = document.getElementById('jobs');
+    const orchestratorUrl = document.getElementById("orchestratorUrl").value;
+    const path = '/orchestrator/jobs?orchestratorUrl='.concat(orchestratorUrl);
 
-    if (dockerUrlStatus.key && nomadUrlStatus.key) {
+    if (platformUrlStatus.key && orchestratorUrlStatus.key) {
         const data = await getRequest(path);
 
         if(data.length === 0) {
-            elementList.innerHTML = "No hay jobs corriendo en Nomad"
+            elementList.innerHTML = "No hay jobs corriendo en en la plataforma"
         } else {
             elementList.innerHTML = "";
         }
@@ -43,7 +43,7 @@ async function listNomadRunningJobs() {
             buttonLogs.classList.add('btn', 'btn-success', 'ms-2', 'medium-margin-left');
             buttonLogs.appendChild(document.createTextNode('Logs'));
             buttonLogs.addEventListener('click', function () {
-                addNomadLogs(job.id);
+                addLogs(job.id);
             });
             li.appendChild(buttonLogs);
 
@@ -52,7 +52,7 @@ async function listNomadRunningJobs() {
             buttonRemove.classList.add('btn', 'btn-danger', 'ms-2');
             buttonRemove.appendChild(document.createTextNode('Eliminar'));
             buttonRemove.addEventListener('click', function () {
-                stopNomadJob(job.id);
+                stopJob(job.id);
             });
             li.appendChild(buttonRemove);
 
@@ -60,16 +60,16 @@ async function listNomadRunningJobs() {
         });
     } else {
         console.log("Llamada de running jobs no realizada. " +
-            "Estado de los servidores de docker y nomad: " + dockerUrlStatus.key + " - " + nomadUrlStatus.key);
+            "Estado de los servidores de la plataforma y orquestación: " + platformUrlStatus.key + " - " + orchestratorUrlStatus.key);
         elementList.innerHTML = "Jobs no listados. Servidor no accesible";
     }
 }
 
-async function stopNomadJob(jobName) {
-    let nomadUrl = document.getElementById("nomadUrl").value;
+async function stopJob(jobName) {
+    let orchestratorUrl = document.getElementById("orchestratorUrl").value;
 
-    const path = '/nomad/stop?nomadUrl='
-        .concat(nomadUrl)
+    const path = '/orchestrator/stop?orchestratorUrl='
+        .concat(orchestratorUrl)
         .concat("&jobName=")
         .concat(jobName);
 
@@ -81,28 +81,28 @@ async function stopNomadJob(jobName) {
 }
 
 async function startJob(appName, appVersion, eMap) {
-    const dockerUrl = document.getElementById("dockerUrl").value;
-    const nomadUrl = document.getElementById("nomadUrl").value;
+    const platformUrl = document.getElementById("platformUrl").value;
+    const orchestratorUrl = document.getElementById("orchestratorUrl").value;
 
     const body = {
-        dockerUrl: dockerUrl,
-        nomadUrl: nomadUrl,
+        platformUrl: platformUrl,
+        orchestratorUrl: orchestratorUrl,
         appName: appName,
         appVersion: appVersion,
         envs: Object.fromEntries(eMap)
     };
 
-    await postRequest("/nomad/start", body);
+    await postRequest("/orchestrator/start", body);
 }
 
-async function listFixedNomadJobs() {
+async function listFixedJobs() {
     console.log("Getting fixed jobs");
 
-    if (dockerUrlStatus.key && nomadUrlStatus.key) {
-        const path = "/nomad/fixed-jobs";
+    if (platformUrlStatus.key && orchestratorUrlStatus.key) {
+        const path = "/orchestrator/fixed-jobs";
         const data = await getRequest(path);
 
-        const elementList = document.getElementById('nomad-fixed-jobs');
+        const elementList = document.getElementById('fixed-jobs');
 
         if (data.length === 0) {
             elementList.innerHTML = "No hay jobs fijos disponibles en el backend";
@@ -135,13 +135,13 @@ async function listFixedNomadJobs() {
 }
 
 async function startFixedJob(fixedJob) {
-    fixedJob.nomadUrl = document.getElementById("nomadUrl").value;
-    await postRequest("/nomad/start-fixed-job", fixedJob);
+    fixedJob.orchestratorUrl = document.getElementById("orchestratorUrl").value;
+    await postRequest("/orchestrator/start-fixed-job", fixedJob);
 }
 
-async function addNomadLogs(jobId) {
+async function addLogs(jobId) {
 
-    const logsContainer = document.getElementById('nomad-logs');
+    const logsContainer = document.getElementById('logs');
     const divId = "logs-".concat(jobId);
     const data = await getLogsForJob(jobId);
 
@@ -197,10 +197,10 @@ function createDivIfNotExistOrEmptyIt(divId, parentDiv){
 
 
 async function getLogsForJob(jobName) {
-    let nomadUrl = document.getElementById("nomadUrl").value;
+    let orchestratorUrl = document.getElementById("orchestratorUrl").value;
 
-    const path = '/nomad/logs?nomadUrl='
-        .concat(nomadUrl)
+    const path = '/orchestrator/logs?orchestratorUrl='
+        .concat(orchestratorUrl)
         .concat("&jobName=")
         .concat(jobName);
 

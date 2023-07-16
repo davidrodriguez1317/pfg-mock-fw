@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-class NomadControllerGetLogsTest extends BaseIntegrationTest {
+class OrchestratorControllerGetLogsTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnLogs_whenResponseIsOk() {
@@ -21,7 +21,7 @@ class NomadControllerGetLogsTest extends BaseIntegrationTest {
 
         // when
         var result = webTestClient.get()
-                .uri("/nomad/logs?nomadUrl=http://localhost:8888&jobName=mi-job-3")
+                .uri("/orchestrator/logs?orchestratorUrl=http://localhost:8888&jobName=mi-job-3")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class)
@@ -41,7 +41,7 @@ class NomadControllerGetLogsTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/nomad/logs?nomadUrl=http://localhost:8888&jobName=mi-job-3")
+                .uri("/orchestrator/logs?orchestratorUrl=http://localhost:8888&jobName=mi-job-3")
                 .exchange()
                 .expectStatus().isNotFound();
 
@@ -55,7 +55,7 @@ class NomadControllerGetLogsTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/nomad/logs?nomadUrl=http://localhost:8888&jobName=mi-job-3")
+                .uri("/orchestrator/logs?orchestratorUrl=http://localhost:8888&jobName=mi-job-3")
                 .exchange()
                 .expectStatus().isNotFound();
 

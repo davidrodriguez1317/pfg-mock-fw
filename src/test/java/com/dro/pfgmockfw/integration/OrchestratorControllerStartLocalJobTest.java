@@ -12,10 +12,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.util.Map;
 
 @Slf4j
-class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
+class OrchestratorControllerStartLocalJobTest extends BaseIntegrationTest {
 
     private static final LocalJobStartDto localJobStartDataDto = LocalJobStartDto.builder()
-            .nomadUrl("http://localhost:8888")
+            .orchestratorUrl("http://localhost:8888")
             .fileName("some-job.jar")
             .envs(Map.of("ENV_1", "VALUE_1", "ENV_2", "VALUE_2"))
             .build();
@@ -29,7 +29,7 @@ class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.post()
-                .uri("/nomad/start-local-job")
+                .uri("/orchestrator/start-local-job")
                 .body(BodyInserters.fromValue(localJobStartDataDto))
                 .exchange()
                 .expectStatus().isOk()
@@ -46,7 +46,7 @@ class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
         // when //then
         webTestClient.post()
-                .uri("/nomad/start-local-job")
+                .uri("/orchestrator/start-local-job")
                 .body(BodyInserters.fromValue(new FixedJobStartDto()))
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -61,7 +61,7 @@ class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.post()
-                .uri("/nomad/start-local-job")
+                .uri("/orchestrator/start-local-job")
                 .body(BodyInserters.fromValue(localJobStartDataDto))
                 .exchange()
                 .expectStatus().is5xxServerError();
@@ -75,7 +75,7 @@ class NomadControllerStartLocalJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.post()
-                .uri("/nomad/start-local-job")
+                .uri("/orchestrator/start-local-job")
                 .body(BodyInserters.fromValue(localJobStartDataDto))
                 .exchange()
                 .expectStatus().isNotFound();

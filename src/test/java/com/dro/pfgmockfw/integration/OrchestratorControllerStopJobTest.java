@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @Slf4j
-class NomadControllerStopJobTest extends BaseIntegrationTest {
+class OrchestratorControllerStopJobTest extends BaseIntegrationTest {
 
     @Test
     void shouldStopJob_whenResponseIsOk_andEvalIdCorrect() {
@@ -17,7 +17,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
+                .uri("/orchestrator/stop?orchestratorUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
 
                 .expectStatus().isOk()
@@ -33,7 +33,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
+                .uri("/orchestrator/stop?orchestratorUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)
@@ -46,7 +46,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
     void shouldReturn400_whenNotValidRequestParam() {
         //given //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrlxxx=http://localhost:8888&jobName=some-job")
+                .uri("/orchestrator/stop?orchestratorUrlxxx=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -56,7 +56,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
     void shouldReturn400_whenArgumentNotPresent() {
         //given //when //then
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888")
+                .uri("/orchestrator/stop?orchestratorUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -71,7 +71,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
+                .uri("/orchestrator/stop?orchestratorUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().isNotFound();
 
@@ -85,7 +85,7 @@ class NomadControllerStopJobTest extends BaseIntegrationTest {
 
         //when
         webTestClient.delete()
-                .uri("/nomad/stop?nomadUrl=http://localhost:8888&jobName=some-job")
+                .uri("/orchestrator/stop?orchestratorUrl=http://localhost:8888&jobName=some-job")
                 .exchange()
                 .expectStatus().is5xxServerError();
 

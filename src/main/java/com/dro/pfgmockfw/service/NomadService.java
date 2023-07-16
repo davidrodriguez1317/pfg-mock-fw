@@ -7,6 +7,7 @@ import com.dro.pfgmockfw.exception.NoDataAvailableException;
 import com.dro.pfgmockfw.mapper.NomadMapper;
 import com.dro.pfgmockfw.model.nomad.*;
 import com.dro.pfgmockfw.model.nomad.server.ServerRunningJobDto;
+import com.dro.pfgmockfw.service.interfaces.OrchestratorService;
 import com.dro.pfgmockfw.utils.ResourceUtils;
 import com.dro.pfgmockfw.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NomadService {
+public class NomadService implements OrchestratorService {
     private final NomadWebClient nomadWebClient;
 
     private final MockFwProperties mockFwProperties;
@@ -43,7 +44,7 @@ public class NomadService {
 
     public Mono<Boolean> startJob(JobStartDto jobStartDto) {
 
-        String imageName = StringUtils.stripHttpFromUrl(jobStartDto.getDockerUrl())
+        String imageName = StringUtils.stripHttpFromUrl(jobStartDto.getPlatformUrl())
                 .concat("/")
                 .concat(jobStartDto.getAppName())
                 .concat(":")
@@ -56,7 +57,7 @@ public class NomadService {
         String jsonTemplate = ResourceUtils.getStringFromResources("templates/nomad-springboot-docker.json");
         String job = String.format(jsonTemplate, jobStartDto.getAppName(), imageName, envsAsString);
         
-        return nomadWebClient.startJob(jobStartDto.getNomadUrl(), job);
+        return nomadWebClient.startJob(jobStartDto.getOrchestratorUrl(), job);
     }
 
     public Mono<Boolean> stopAndPurgeJob(String nomadUrl, String appName) {
@@ -98,7 +99,7 @@ public class NomadService {
         String jobFileLocation = "fixed-templates/".concat(fixedJobStartDto.getFileName());
         String job = ResourceUtils.getStringFromResources(jobFileLocation);
 
-        return nomadWebClient.startJob(fixedJobStartDto.getNomadUrl(), job);
+        return nomadWebClient.startJob(fixedJobStartDto.getOrchestratorUrl(), job);
     }
 
     public Mono<Boolean> uploadJar(MultipartFile jarFile) {
@@ -128,7 +129,7 @@ public class NomadService {
 
         String job = String.format(jsonTemplate, nameWithoutExtension, vmPath, envsAsString);
 
-        return nomadWebClient.startJob(localJobStartDto.getNomadUrl(), job);
+        return nomadWebClient.startJob(localJobStartDto.getOrchestratorUrl(), job);
     }
 
     public Flux<String> getLogs(final String nomadUrl, final String jobName) {

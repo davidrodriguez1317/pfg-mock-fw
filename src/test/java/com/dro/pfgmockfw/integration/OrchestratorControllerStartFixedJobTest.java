@@ -1,35 +1,34 @@
 package com.dro.pfgmockfw.integration;
 
 import com.dro.pfgmockfw.integration.stubs.NomadStubs;
-import com.dro.pfgmockfw.model.nomad.JobStartDto;
+import com.dro.pfgmockfw.model.nomad.FixedJobStartDto;
 import com.dro.pfgmockfw.utils.BaseIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.util.Map;
-
 @Slf4j
-class NomadControllerStartJobTest extends BaseIntegrationTest {
+class OrchestratorControllerStartFixedJobTest extends BaseIntegrationTest {
 
-    private static final JobStartDto JOB_START_DTO = JobStartDto.builder()
-            .dockerUrl("http://localhost:5001")
-            .nomadUrl("http://localhost:8888")
-            .appName("first-app")
-            .appVersion("0.0.1-SNAPSHOT")
-            .envs(Map.of("ENV1", "value1", "ENV2", "value2"))
+    private static final FixedJobStartDto fixedJobStartDataDto = FixedJobStartDto.builder()
+            .orchestratorUrl("http://localhost:8888")
+            .name("keycloak")
+            .version("18.0")
+            .fileName("nomad-keycloak-18.0.json")
             .build();
+
 
     @Test
     void shouldStartJob_whenResponseIsOk() {
         //given
         NomadStubs.stubNomadStartJob();
 
+
         //when //then
         webTestClient.post()
-                .uri("/nomad/start")
-                .body(BodyInserters.fromValue(JOB_START_DTO))
+                .uri("/orchestrator/start-fixed-job")
+                .body(BodyInserters.fromValue(fixedJobStartDataDto))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)
@@ -45,8 +44,8 @@ class NomadControllerStartJobTest extends BaseIntegrationTest {
 
         // when //then
         webTestClient.post()
-                .uri("/nomad/start")
-                .body(BodyInserters.fromValue(new JobStartDto()))
+                .uri("/orchestrator/start-fixed-job")
+                .body(BodyInserters.fromValue(new FixedJobStartDto()))
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -60,8 +59,8 @@ class NomadControllerStartJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.post()
-                .uri("/nomad/start")
-                .body(BodyInserters.fromValue(JOB_START_DTO))
+                .uri("/orchestrator/start-fixed-job")
+                .body(BodyInserters.fromValue(fixedJobStartDataDto))
                 .exchange()
                 .expectStatus().is5xxServerError();
 
@@ -74,8 +73,8 @@ class NomadControllerStartJobTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.post()
-                .uri("/nomad/start")
-                .body(BodyInserters.fromValue(JOB_START_DTO))
+                .uri("/orchestrator/start-fixed-job")
+                .body(BodyInserters.fromValue(fixedJobStartDataDto))
                 .exchange()
                 .expectStatus().isNotFound();
 

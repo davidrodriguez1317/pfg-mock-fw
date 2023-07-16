@@ -12,10 +12,10 @@ import java.util.Map;
 @Getter
 public class JobStartDto {
     @NotBlank
-    private String dockerUrl;
+    private String platformUrl;
 
     @NotBlank
-    private String nomadUrl;
+    private String orchestratorUrl;
 
     @NotBlank
     private String appName;

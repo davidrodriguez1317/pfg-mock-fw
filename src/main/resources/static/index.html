@@ -5,45 +5,43 @@
     <title>Mock framework</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"
-            integrity="sha384-7hjbQ2W4F3Z8vc86TXLc+J2o4APjL3c3yxPXqxBEOkZ1Zsogd5cveIyWU7Z6LXGr" crossorigin="anonymous"></script>
     <script src="../js/general.js"></script>
     <script src="../js/status.js"></script>
-    <script src="../js/docker.js"></script>
-    <script src="../js/nomad.js"></script>
+    <script src="../js/platform.js"></script>
+    <script src="../js/orchestrator.js"></script>
     <script src="../js/envs.js"></script>
     <script src="../js/dev-app.js"></script>
-    <script src="js/nomad.js"></script>
+    <script src="../js/unpkg/axios.min.js"></script>
 </head>
 <body>
 <form>
     <div class="container">
         <h2 class="h2">Verificación de estado de URL</h2>
         <div class="form-group container-all-one-line">
-            <label for="dockerUrl" class="label-centered">DOCKER:</label>
-            <input type="text" class="form-control" id="dockerUrl" name="dockerUrl" value="http://localhost:5000">
-            <div id="dockerCheck"><h3 class="url-check">&#x274C;</h3></div>
+            <label for="platformUrl" class="label-centered">PLATAFORMA:</label>
+            <input type="text" class="form-control" id="platformUrl" name="platformUrl" value="http://localhost:5000">
+            <div id="platformCheck"><h3 class="url-check">&#x274C;</h3></div>
             <button class="btn btn-primary" type="button"
-                    onclick="checkUrl('dockerUrl', 'dockerCheck', dockerUrlStatus)">Verificar
+                    onclick="checkUrl('platformUrl', 'platformCheck', platformUrlStatus)">Verificar
             </button>
         </div>
         <div class="form-group container-all-one-line">
-            <label for="nomadUrl" class="label-centered">NOMAD:&nbsp;&nbsp;</label>
-            <input type="text" class="form-control" id="nomadUrl" name="nomadUrl" value="http://localhost:4646">
-            <div id="nomadCheck"><h3 class="url-check">&#x274C;</h3></div>
-            <button class="btn btn-primary" type="button" onclick="checkUrl('nomadUrl', 'nomadCheck', nomadUrlStatus)">
+            <label for="orchestratorUrl" class="label-centered">ORQUESTADOR:&nbsp;&nbsp;</label>
+            <input type="text" class="form-control" id="orchestratorUrl" name="orchestratorUrl" value="http://localhost:4646">
+            <div id="orchestratorCheck"><h3 class="url-check">&#x274C;</h3></div>
+            <button class="btn btn-primary" type="button" onclick="checkUrl('orchestratorUrl', 'orchestratorCheck', orchestratorUrlStatus)">
                 Verificar
             </button>
         </div>
         <div class="url-container">
-            <h2 class="h2">Imágenes Docker
-                <button class="btn btn-primary" type="button" onclick="listDockerRegistryImages()">Listar</button>
+            <h2 class="h2">Imágenes de la plataforma
+                <button class="btn btn-primary" type="button" onclick="listPlatformImages()">Listar</button>
             </h2>
             <div class="url-list">
-                <ul id="docker-registry-images"></ul>
+                <ul id="platform-registry-images"></ul>
             </div>
         </div>
-        <div id="docker-images-envs" style="display: none;">
+        <div id="platform-images-envs" style="display: none;">
             <div class="form-group container-all-one-line">
                 <div>
                     <input type="text" class="form-control" id="env-key-in" placeholder="Clave">
@@ -56,7 +54,7 @@
                     <button class="btn btn-success" type="button" onclick="addKeyValuePair('env-kvs', 'env-key-in', 'env-value-in')">Agregar env</button>
                 </span>
                 <span>
-                    <button class="btn btn-success" type="button" onclick="launchJobWithEnvs('env-kvs', 'docker-images-envs')">Lanzar job</button>
+                    <button class="btn btn-success" type="button" onclick="launchJobWithEnvs('env-kvs', 'platform-images-envs')">Lanzar job</button>
                 </span>
                 <span>
                     <button class="btn btn-danger" type="button" onclick="cleanLaunchJobWithEnvs('env-kvs')">Cancelar</button>
@@ -66,11 +64,11 @@
             <hr>
         </div>
         <div class="url-container">
-            <h2 class="h2">Jobs de Nomad fijos
-                <button class="btn btn-primary" type="button" onclick="listFixedNomadJobs()">Listar</button>
+            <h2 class="h2">Jobs fijos
+                <button class="btn btn-primary" type="button" onclick="listFixedJobs()">Listar</button>
             </h2>
             <div class="url-list">
-                <ul id="nomad-fixed-jobs"></ul>
+                <ul id="fixed-jobs"></ul>
             </div>
         </div>
         <div class="url-container">
@@ -83,7 +81,7 @@
                 <button type="button" class="btn btn-primary" onclick="sendJarFile()">Subir</button>
                 <div class="spinner-border text-primary d-none" role="status" id="upload-spinner"></div>
             </div>
-            <div id="loc-docker-images-envs" style="display: none;">
+            <div id="loc-platform-images-envs" style="display: none;">
                 <div class="form-group container-all-one-line">
                     <div>
                         <input type="text" class="form-control" id="loc-env-key-in" placeholder="Clave">
@@ -98,7 +96,7 @@
                         </span>
                     <span>
                             <button class="btn btn-success" type="button"
-                                    onclick="launchLocalJobWithEnvs('loc-env-kvs', 'loc-docker-images-envs')">Lanzar job</button>
+                                    onclick="launchLocalJobWithEnvs('loc-env-kvs', 'loc-platform-images-envs')">Lanzar job</button>
                         </span>
                     <span>
                             <button class="btn btn-danger" type="button"
@@ -111,15 +109,15 @@
             <hr>
         </div>
         <div class="url-container">
-            <h2 class="h2">Jobs de Nomad</h2>
+            <h2 class="h2">Jobs en el orquestador</h2>
             <div class="url-list">
-                <ul id="nomad-jobs"></ul>
+                <ul id="jobs"></ul>
             </div>
         </div>
         <div class="url-container">
             <h2 class="h2">Logs</h2>
             <div class="logs-list">
-                <ul id="nomad-logs"></ul>
+                <ul id="logs"></ul>
             </div>
         </div>
     </div>

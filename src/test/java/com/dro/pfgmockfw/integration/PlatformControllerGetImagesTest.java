@@ -13,7 +13,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-class DockerControllerGetImagesTest extends BaseIntegrationTest {
+class PlatformControllerGetImagesTest extends BaseIntegrationTest {
 
     @Test
     void shouldReturnRepositoriesWithTags_whenResponseIsOk() {
@@ -34,7 +34,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
         //when
         webTestClient.get()
-                .uri("/docker/images?dockerUrl=http://localhost:8888")
+                .uri("/platform/images?platformUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RepositoryWithTagsResponseDto.class)
@@ -50,7 +50,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/docker/images?dockerUrl=http://localhost:8888")
+                .uri("/platform/images?platformUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RepositoryWithTagsResponseDto.class)
@@ -66,7 +66,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
     void shouldReturn400_whenArgumentsNotPresent() {
         //given //when //then
         webTestClient.get()
-                .uri("/docker/images")
+                .uri("/platform/images")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -76,7 +76,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
     void shouldReturn400_whenArgumentsNotCorrect() {
         //given //when //then
         webTestClient.get()
-                .uri("/docker/images?dockerUrlxxx=http://localhost:8888")
+                .uri("/platform/images?platformUrlxxx=http://localhost:8888")
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -89,7 +89,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/docker/images?dockerUrl=http://localhost:8888")
+                .uri("/platform/images?platformUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().is5xxServerError();
 
@@ -102,7 +102,7 @@ class DockerControllerGetImagesTest extends BaseIntegrationTest {
 
         //when //then
         webTestClient.get()
-                .uri("/docker/images?dockerUrl=http://localhost:8888")
+                .uri("/platform/images?platformUrl=http://localhost:8888")
                 .exchange()
                 .expectStatus().isNotFound();
 

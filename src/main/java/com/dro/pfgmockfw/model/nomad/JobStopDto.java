@@ -11,7 +11,7 @@ import lombok.*;
 public class JobStopDto {
 
     @NotBlank
-    private String nomadUrl;
+    private String orchestratorUrl;
 
     @NotBlank
     private String jobId;
